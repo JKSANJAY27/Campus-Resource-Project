@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="360" viewBox="0 0 750 360" style="background-color: #0f172a; font-family: ui-sans-serif, system-ui, sans-serif;">
+  <text x="375.0" y="32" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="bold">Empirical Speedup Multipliers Across Specialized Models</text>
+  <text x="375.0" y="50" text-anchor="middle" fill="#94a3b8" font-size="12">Specialized Model vs Generic Baseline (Higher is better)</text>
+  <text x="245" y="76" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="600">Cache Acceleration</text>
+  <text x="245" y="92" fill="#94a3b8" font-size="10" text-anchor="end">Redis vs MongoDB</text>
+  <rect x="260" y="64" width="381.3" height="28" rx="6" fill="#6366f1" />
+  <text x="651.3" y="83" fill="#a5b4fc" font-size="13" font-weight="bold">18.6x Faster</text>
+  <text x="245" y="141" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="600">Multi-Hop Dependency Traversal</text>
+  <text x="245" y="157" fill="#94a3b8" font-size="10" text-anchor="end">Neo4j vs MongoDB</text>
+  <rect x="260" y="129" width="28.699999999999996" height="28" rx="6" fill="#6366f1" />
+  <text x="298.7" y="148" fill="#a5b4fc" font-size="13" font-weight="bold">1.4x Faster</text>
+  <text x="245" y="206" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="600">Telemetry Ingestion</text>
+  <text x="245" y="222" fill="#94a3b8" font-size="10" text-anchor="end">Cassandra vs MongoDB</text>
+  <rect x="260" y="194" width="67.64999999999999" height="28" rx="6" fill="#6366f1" />
+  <text x="337.65" y="213" fill="#a5b4fc" font-size="13" font-weight="bold">3.3x Faster</text>
+  <text x="245" y="271" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="600">Single Entity Point Read</text>
+  <text x="245" y="287" fill="#94a3b8" font-size="10" text-anchor="end">Redis vs MongoDB</text>
+  <rect x="260" y="259" width="135.29999999999998" height="28" rx="6" fill="#6366f1" />
+  <text x="405.29999999999995" y="278" fill="#a5b4fc" font-size="13" font-weight="bold">6.6x Faster</text>
+</svg>

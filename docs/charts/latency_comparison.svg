@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480" style="background-color: #0f172a; font-family: ui-sans-serif, system-ui, sans-serif;">
+  <text x="400.0" y="32" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="bold">NoSQL Multi-Model Latency Benchmarks (P50 vs P99 in ms)</text>
+  <text x="400.0" y="50" text-anchor="middle" fill="#94a3b8" font-size="12">Lower is better • Local environment latency distribution</text>
+  <line x1="200.0" y1="60" x2="200.0" y2="438" stroke="#334155" stroke-dasharray="3,3" />
+  <text x="200.0" y="458" fill="#94a3b8" font-size="11" text-anchor="middle">0ms</text>
+  <line x1="281.25" y1="60" x2="281.25" y2="438" stroke="#334155" stroke-dasharray="3,3" />
+  <text x="281.25" y="458" fill="#94a3b8" font-size="11" text-anchor="middle">5ms</text>
+  <line x1="362.5" y1="60" x2="362.5" y2="438" stroke="#334155" stroke-dasharray="3,3" />
+  <text x="362.5" y="458" fill="#94a3b8" font-size="11" text-anchor="middle">10ms</text>
+  <line x1="443.75" y1="60" x2="443.75" y2="438" stroke="#334155" stroke-dasharray="3,3" />
+  <text x="443.75" y="458" fill="#94a3b8" font-size="11" text-anchor="middle">15ms</text>
+  <line x1="525.0" y1="60" x2="525.0" y2="438" stroke="#334155" stroke-dasharray="3,3" />
+  <text x="525.0" y="458" fill="#94a3b8" font-size="11" text-anchor="middle">20ms</text>
+  <line x1="606.25" y1="60" x2="606.25" y2="438" stroke="#334155" stroke-dasharray="3,3" />
+  <text x="606.25" y="458" fill="#94a3b8" font-size="11" text-anchor="middle">25ms</text>
+  <line x1="687.5" y1="60" x2="687.5" y2="438" stroke="#334155" stroke-dasharray="3,3" />
+  <text x="687.5" y="458" fill="#94a3b8" font-size="11" text-anchor="middle">30ms</text>
+  <text x="185" y="78" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Redis Point Read</text>
+  <rect x="200" y="64" width="22.912499999999998" height="24" rx="4" fill="#ef4444" opacity="0.35" />
+  <rect x="200" y="64" width="11.7" height="24" rx="4" fill="#ef4444" />
+  <text x="230.9125" y="78" fill="#f1f5f9" font-size="11">P50: 0.72ms | P99: 1.41ms</text>
+  <text x="185" y="120" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Cassandra Append</text>
+  <rect x="200" y="106" width="65.8125" height="24" rx="4" fill="#f59e0b" opacity="0.35" />
+  <rect x="200" y="106" width="40.95" height="24" rx="4" fill="#f59e0b" />
+  <text x="273.8125" y="120" fill="#f1f5f9" font-size="11">P50: 2.52ms | P99: 4.05ms</text>
+  <text x="185" y="162" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Neo4j 1-Hop Graph</text>
+  <rect x="200" y="148" width="92.95" height="24" rx="4" fill="#3b82f6" opacity="0.35" />
+  <rect x="200" y="148" width="62.074999999999996" height="24" rx="4" fill="#3b82f6" />
+  <text x="300.95" y="162" fill="#f1f5f9" font-size="11">P50: 3.82ms | P99: 5.72ms</text>
+  <text x="185" y="204" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Mongo _id Read</text>
+  <rect x="200" y="190" width="118.3" height="24" rx="4" fill="#10b981" opacity="0.35" />
+  <rect x="200" y="190" width="77.1875" height="24" rx="4" fill="#10b981" />
+  <text x="326.3" y="204" fill="#f1f5f9" font-size="11">P50: 4.75ms | P99: 7.28ms</text>
+  <text x="185" y="246" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Cassandra Partition</text>
+  <rect x="200" y="232" width="142.1875" height="24" rx="4" fill="#f59e0b" opacity="0.35" />
+  <rect x="200" y="232" width="91.325" height="24" rx="4" fill="#f59e0b" />
+  <text x="350.1875" y="246" fill="#f1f5f9" font-size="11">P50: 5.62ms | P99: 8.75ms</text>
+  <text x="185" y="288" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Neo4j 3-Hop DAG</text>
+  <rect x="200" y="274" width="238.0625" height="24" rx="4" fill="#3b82f6" opacity="0.35" />
+  <rect x="200" y="274" width="164.9375" height="24" rx="4" fill="#3b82f6" />
+  <text x="446.0625" y="288" fill="#f1f5f9" font-size="11">P50: 10.15ms | P99: 14.65ms</text>
+  <text x="185" y="330" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Mongo Aggregation</text>
+  <rect x="200" y="316" width="324.1875" height="24" rx="4" fill="#10b981" opacity="0.35" />
+  <rect x="200" y="316" width="234.8125" height="24" rx="4" fill="#10b981" />
+  <text x="532.1875" y="330" fill="#f1f5f9" font-size="11">P50: 14.45ms | P99: 19.95ms</text>
+  <text x="185" y="372" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Cache Cold Miss</text>
+  <rect x="200" y="358" width="310.375" height="24" rx="4" fill="#ef4444" opacity="0.35" />
+  <rect x="200" y="358" width="245.375" height="24" rx="4" fill="#ef4444" />
+  <text x="518.375" y="372" fill="#f1f5f9" font-size="11">P50: 15.1ms | P99: 19.1ms</text>
+  <text x="185" y="414" fill="#e2e8f0" font-size="12" text-anchor="end" font-weight="500">Polyglot E2E</text>
+  <rect x="200" y="400" width="473.6875" height="24" rx="4" fill="#8b5cf6" opacity="0.35" />
+  <rect x="200" y="400" width="329.0625" height="24" rx="4" fill="#8b5cf6" />
+  <text x="681.6875" y="414" fill="#f1f5f9" font-size="11">P50: 20.25ms | P99: 29.15ms</text>
+</svg>
