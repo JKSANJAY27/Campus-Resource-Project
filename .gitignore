@@ -44,3 +44,4 @@ mongo_data/
 neo4j_data/
 redis_data/
 cassandra_data/
+*.tsbuildinfo

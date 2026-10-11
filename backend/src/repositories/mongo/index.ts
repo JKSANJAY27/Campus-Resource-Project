@@ -8,3 +8,4 @@ export * from './resource.repository.js';
 export * from './club.repository.js';
 export * from './event.repository.js';
 export * from './facility.repository.js';
+export * from './career-role.repository.js';

@@ -17,6 +17,7 @@ import { activityRouter } from './routes/activity.routes.js';
 import { syncRouter } from './routes/sync.routes.js';
 import { benchmarkRouter } from './routes/benchmark.routes.js';
 import { nosqlDemoRouter } from './routes/nosql-demo.routes.js';
+import { careerDiscoveryRouter } from './routes/career-discovery.routes.js';
 import { apiRateLimiter } from './middleware/rateLimiter.js';
 
 export const createApp = (): Express => {
@@ -63,6 +64,7 @@ export const createApp = (): Express => {
         sync: '/api/v1/sync',
         benchmarks: '/api/v1/benchmarks',
         nosqlDemos: '/api/v1/nosql-demos',
+        careerDiscovery: '/api/v1/career-discovery',
       },
     });
   });
@@ -85,6 +87,7 @@ export const createApp = (): Express => {
   app.use('/api/v1/sync', syncRouter);
   app.use('/api/v1/benchmarks', benchmarkRouter);
   app.use('/api/v1/nosql-demos', nosqlDemoRouter);
+  app.use('/api/v1/career-discovery', careerDiscoveryRouter);
 
   // 404 Handler
   app.use((req: Request, res: Response) => {

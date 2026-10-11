@@ -51,6 +51,7 @@ export function Sidebar({ currentView, onNavigate }: SidebarProps) {
     {
       title: 'Academic Intelligence',
       items: [
+        { id: 'career-discovery', label: 'Career Discovery', icon: Compass, badge: 'New', badgeColor: 'bg-emerald-500/20 text-emerald-300' },
         { id: 'skill-gap', label: '3. Skill Gap Analysis', icon: Target },
         { id: 'learning-path', label: '4. Learning Path', icon: Compass, badge: 'Roadmap', badgeColor: 'bg-indigo-500/20 text-indigo-300' },
         { id: 'courses', label: '5. Course Recommendations', icon: BookOpen },

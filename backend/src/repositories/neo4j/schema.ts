@@ -11,6 +11,7 @@ export const NEO4J_CONSTRAINTS = [
   'CREATE CONSTRAINT event_id_unique IF NOT EXISTS FOR (e:Event) REQUIRE e.id IS UNIQUE',
   'CREATE CONSTRAINT resource_id_unique IF NOT EXISTS FOR (r:Resource) REQUIRE r.id IS UNIQUE',
   'CREATE CONSTRAINT facility_id_unique IF NOT EXISTS FOR (f:Facility) REQUIRE f.id IS UNIQUE',
+  'CREATE CONSTRAINT role_id_unique IF NOT EXISTS FOR (ro:Role) REQUIRE ro.id IS UNIQUE',
 ];
 
 export const NEO4J_INDEXES = [
@@ -24,6 +25,8 @@ export const NEO4J_INDEXES = [
   'CREATE INDEX student_dept_idx IF NOT EXISTS FOR (s:Student) ON (s.department)',
   'CREATE INDEX student_sem_idx IF NOT EXISTS FOR (s:Student) ON (s.semester)',
   'CREATE INDEX event_date_idx IF NOT EXISTS FOR (e:Event) ON (e.eventDate)',
+  'CREATE INDEX role_category_idx IF NOT EXISTS FOR (ro:Role) ON (ro.category)',
+  'CREATE INDEX role_title_idx IF NOT EXISTS FOR (ro:Role) ON (ro.title)',
 ];
 
 export async function setupNeo4jSchema(session: Session): Promise<void> {

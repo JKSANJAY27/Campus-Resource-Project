@@ -422,7 +422,7 @@ export function GraphExplorerView() {
         return {
           ...e,
           animated: false,
-          style: { stroke: e.markerEnd?.color || '#475569', strokeWidth: 2 },
+          style: { stroke: (e.markerEnd as any)?.color || '#475569', strokeWidth: 2 },
         };
       })
     );

@@ -19,6 +19,7 @@ import { PerformanceDashboard } from '../components/PerformanceDashboard';
 import { NoSqlArchitectureView } from '../components/NoSqlArchitectureView';
 import { ReproducibleBenchmarkDashboard } from '../components/ReproducibleBenchmarkDashboard';
 import { AdvancedNoSqlDemoView } from '../components/AdvancedNoSqlDemoView';
+import { CareerDiscoveryView } from '../components/CareerDiscoveryView';
 
 interface DatabaseHealth {
   status: 'connected' | 'disconnected' | 'error';
@@ -109,6 +110,11 @@ export default function Home() {
               studentId={currentStudentId}
               onSelectStudent={setCurrentStudentId}
             />
+          )}
+
+          {/* Career Discovery Engine */}
+          {currentView === 'career-discovery' && (
+            <CareerDiscoveryView studentId={currentStudentId} />
           )}
 
           {/* 3. Skill Gap Analysis */}

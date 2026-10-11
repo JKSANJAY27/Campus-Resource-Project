@@ -501,3 +501,67 @@ StudentSchema.index({ name: 'text', rollNumber: 'text', email: 'text' });
 StudentSchema.index({ cgpa: -1, currentSemester: 1 });
 
 export const StudentModel = mongoose.models.Student || mongoose.model<IStudent>('Student', StudentSchema);
+
+// ==========================================
+// 10. Career Role Model (Role Catalogue)
+// ==========================================
+export interface ICareerRole extends Document {
+  roleId: string;
+  title: string;
+  slug: string;
+  category: 'Software Engineering' | 'Web Development' | 'Data Science & AI' | 'Cloud & DevOps' | 'Cybersecurity' | 'Systems & Hardware';
+  description: string;
+  summary: string;
+  requiredSkillIds: string[];
+  preferredSkillIds: string[];
+  typicalJobTitles: string[];
+  averageSalaryRange: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+  demandLevel: 'High' | 'Very High' | 'Moderate';
+  growthRate: string;
+  keyResponsibilities: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export const CareerRoleSchema = new Schema<ICareerRole>(
+  {
+    roleId: { type: String, required: true, unique: true, index: true },
+    title: { type: String, required: true, index: true },
+    slug: { type: String, required: true, unique: true, index: true },
+    category: {
+      type: String,
+      required: true,
+      enum: ['Software Engineering', 'Web Development', 'Data Science & AI', 'Cloud & DevOps', 'Cybersecurity', 'Systems & Hardware'],
+      index: true,
+    },
+    description: { type: String, required: true },
+    summary: { type: String, required: true },
+    requiredSkillIds: [{ type: String, required: true }],
+    preferredSkillIds: [{ type: String, default: [] }],
+    typicalJobTitles: [{ type: String, default: [] }],
+    averageSalaryRange: {
+      min: { type: Number, required: true },
+      max: { type: Number, required: true },
+      currency: { type: String, default: 'USD' },
+    },
+    demandLevel: {
+      type: String,
+      required: true,
+      enum: ['High', 'Very High', 'Moderate'],
+      default: 'High',
+    },
+    growthRate: { type: String, default: '+15% through 2030' },
+    keyResponsibilities: [{ type: String, default: [] }],
+  },
+  { timestamps: true }
+);
+
+CareerRoleSchema.index({ title: 'text', description: 'text', summary: 'text' });
+CareerRoleSchema.index({ category: 1, demandLevel: 1 });
+
+export const CareerRoleModel = mongoose.models.CareerRole || mongoose.model<ICareerRole>('CareerRole', CareerRoleSchema);
+
