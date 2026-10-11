@@ -53,7 +53,7 @@ export async function demoMongoSharding(): Promise<DemoResult> {
       await dbManager.connectMongo();
     }
     docCount = await StudentModel.countDocuments();
-    sampleDocs = await StudentModel.find({}, { studentId: 1, department: 1, _id: 0 }).lean().limit(200);
+    sampleDocs = (await StudentModel.find({}, { studentId: 1, department: 1, _id: 0 }).lean().limit(200)) as any;
     steps.push({
       step: 1,
       label: 'Fetch document metadata from MongoDB',
@@ -276,7 +276,7 @@ export async function demoCassandraPartitioning(): Promise<DemoResult> {
 
     const tokenRing = Array.from({ length: 256 }, (_, i) => ({
       vnode: i,
-      tokenRangeStart: BigInt(-2n ** 63n) + (BigInt(i) * (2n ** 64n / 256n)),
+      tokenRangeStart: BigInt(-(2n ** 63n)) + (BigInt(i) * (2n ** 64n / 256n)),
     }));
 
     const samplePartitions = [

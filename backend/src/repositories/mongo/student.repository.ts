@@ -43,11 +43,13 @@ export class StudentRepository extends BaseMongoRepository<IStudent> {
     return this.findAll({ ...base, filter }, ['name', 'rollNumber', 'email']);
   }
 
-  /** Add a skill to student (upsert by skillId) */
+  /** Add a skill to student (upsert by skillId with competence type) */
   public async addOrUpdateSkill(
     studentId: string,
     skillId: string,
-    level: 'beginner' | 'intermediate' | 'advanced'
+    level: 'beginner' | 'intermediate' | 'advanced',
+    competenceType: 'self_reported' | 'course_exposure' | 'project_demonstrated' | 'verified' = 'self_reported',
+    evidenceDescription?: string
   ): Promise<IStudent | null> {
     // Remove if already exists, then push new entry (maintains single entry per skillId)
     await this.model.updateOne(
@@ -59,10 +61,25 @@ export class StudentRepository extends BaseMongoRepository<IStudent> {
       { studentId },
       {
         $push: {
-          skills: { skillId, level, acquiredAt: new Date() },
+          skills: {
+            skillId,
+            level,
+            competenceType,
+            evidenceDescription,
+            acquiredAt: new Date(),
+          },
         },
       } as any,
       { new: true, runValidators: true }
+    ).exec();
+  }
+
+  /** Remove a skill from student */
+  public async removeSkill(studentId: string, skillId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $pull: { skills: { skillId } } } as any,
+      { new: true }
     ).exec();
   }
 
@@ -70,8 +87,9 @@ export class StudentRepository extends BaseMongoRepository<IStudent> {
   public async addCompletedCourse(
     studentId: string,
     courseId: string,
-    grade: 'A+' | 'A' | 'B+' | 'B' | 'C',
-    completedSemester: number
+    grade: 'A+' | 'A' | 'B+' | 'B' | 'C' | 'In Progress' | string = 'A',
+    completedSemester: number = 1,
+    status: 'completed' | 'in_progress' | 'planned' = 'completed'
   ): Promise<IStudent | null> {
     await this.model.updateOne(
       { studentId },
@@ -82,10 +100,25 @@ export class StudentRepository extends BaseMongoRepository<IStudent> {
       { studentId },
       {
         $push: {
-          completedCourses: { courseId, grade, completedSemester, completedAt: new Date() },
+          completedCourses: {
+            courseId,
+            grade,
+            completedSemester,
+            status,
+            completedAt: new Date(),
+          },
         },
       } as any,
       { new: true, runValidators: true }
+    ).exec();
+  }
+
+  /** Remove completed course */
+  public async removeCompletedCourse(studentId: string, courseId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $pull: { completedCourses: { courseId } } } as any,
+      { new: true }
     ).exec();
   }
 
@@ -94,6 +127,47 @@ export class StudentRepository extends BaseMongoRepository<IStudent> {
     return this.model.findOneAndUpdate(
       { studentId },
       { $addToSet: { projectIds: projectId } } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Add or update custom project */
+  public async addOrUpdateCustomProject(
+    studentId: string,
+    project: {
+      projectId: string;
+      title: string;
+      description?: string;
+      technologiesUsed: string[];
+      skillsDemonstrated: string[];
+      role?: string;
+      link?: string;
+    }
+  ): Promise<IStudent | null> {
+    await this.model.updateOne(
+      { studentId },
+      { $pull: { customProjects: { projectId: project.projectId } } } as any
+    ).exec();
+
+    return this.model.findOneAndUpdate(
+      { studentId },
+      {
+        $push: {
+          customProjects: {
+            ...project,
+            createdAt: new Date(),
+          },
+        },
+      } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Remove custom project */
+  public async removeCustomProject(studentId: string, projectId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $pull: { customProjects: { projectId } } } as any,
       { new: true }
     ).exec();
   }

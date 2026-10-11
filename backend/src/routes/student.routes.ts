@@ -27,7 +27,13 @@ import {
   updateStudent,
   deleteStudent,
   addSkill,
+  removeSkill,
   addCompletedCourse,
+  removeCompletedCourse,
+  addCustomProject,
+  removeCustomProject,
+  onboardStudent,
+  getProfileSummary,
   joinClub,
   attendEvent,
   getMostActiveStudents,
@@ -36,6 +42,10 @@ import {
 } from '../controllers/student.controller.js';
 
 export const studentRouter = Router();
+
+// Onboarding & Profile Summary
+studentRouter.post('/onboard', onboardStudent);
+studentRouter.get('/:studentId/summary', getProfileSummary);
 
 // Analytics (must be before /:studentId to avoid param conflict)
 studentRouter.get('/analytics/most-active', getMostActiveStudents);
@@ -49,8 +59,15 @@ studentRouter.get('/:studentId', getStudent);
 studentRouter.put('/:studentId', updateStudent);
 studentRouter.delete('/:studentId', deleteStudent);
 
-// Sub-documents
+// Sub-documents & Management
 studentRouter.post('/:studentId/skills', addSkill);
+studentRouter.delete('/:studentId/skills/:skillId', removeSkill);
+
 studentRouter.post('/:studentId/courses', addCompletedCourse);
+studentRouter.delete('/:studentId/courses/:courseId', removeCompletedCourse);
+
+studentRouter.post('/:studentId/custom-projects', addCustomProject);
+studentRouter.delete('/:studentId/custom-projects/:projectId', removeCustomProject);
+
 studentRouter.post('/:studentId/clubs', joinClub);
 studentRouter.post('/:studentId/events', attendEvent);

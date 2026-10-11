@@ -318,13 +318,35 @@ export interface IStudentSkill {
   skillId: string;
   level: 'beginner' | 'intermediate' | 'advanced';
   acquiredAt: Date;
+  competenceType?: 'self_reported' | 'course_exposure' | 'project_demonstrated' | 'verified';
+  evidenceDescription?: string;
 }
 
 export interface IStudentCompletedCourse {
   courseId: string;
-  grade: 'A+' | 'A' | 'B+' | 'B' | 'C';
+  grade: 'A+' | 'A' | 'B+' | 'B' | 'C' | 'In Progress' | string;
   completedSemester: number;
   completedAt: Date;
+  status?: 'completed' | 'in_progress' | 'planned';
+}
+
+export interface IStudentCertification {
+  name: string;
+  issuer: string;
+  issueDate?: Date;
+  credentialUrl?: string;
+  associatedSkillIds?: string[];
+}
+
+export interface IStudentCustomProject {
+  projectId: string;
+  title: string;
+  description?: string;
+  technologiesUsed: string[];
+  skillsDemonstrated: string[];
+  role?: string;
+  link?: string;
+  createdAt?: Date;
 }
 
 export interface IStudent extends Document {
@@ -333,12 +355,24 @@ export interface IStudent extends Document {
   name: string;
   email: string;
   department: string;
+  degree?: string;
+  branch?: string;
+  institution?: string;
+  graduationYear?: number;
   currentSemester: number;
   cgpa: number;
   interests: string[];
+  careerInterests?: string[];
+  preferredLocations?: string[];
+  workArrangement?: 'remote' | 'hybrid' | 'onsite' | 'any';
+  roleLevelPreference?: 'internship' | 'entry_level' | 'experienced' | 'any';
   skills: IStudentSkill[];
   completedCourses: IStudentCompletedCourse[];
   projectIds: string[];
+  customProjects?: IStudentCustomProject[];
+  certifications?: IStudentCertification[];
+  savedRoleIds?: string[];
+  savedJobIds?: string[];
   clubMemberships: {
     clubId: string;
     role: 'Member' | 'Lead' | 'Coordinator';
@@ -356,9 +390,25 @@ export const StudentSchema = new Schema<IStudent>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, index: true },
     department: { type: String, required: true, index: true },
+    degree: { type: String, default: 'B.Tech' },
+    branch: { type: String },
+    institution: { type: String, default: 'Campus Institute of Technology' },
+    graduationYear: { type: Number, default: 2026 },
     currentSemester: { type: Number, required: true, min: 1, max: 8 },
     cgpa: { type: Number, required: true, min: 0.0, max: 10.0 },
     interests: [{ type: String }],
+    careerInterests: [{ type: String }],
+    preferredLocations: [{ type: String }],
+    workArrangement: {
+      type: String,
+      enum: ['remote', 'hybrid', 'onsite', 'any'],
+      default: 'any',
+    },
+    roleLevelPreference: {
+      type: String,
+      enum: ['internship', 'entry_level', 'experienced', 'any'],
+      default: 'any',
+    },
     skills: [
       {
         skillId: { type: String, required: true },
@@ -368,6 +418,12 @@ export const StudentSchema = new Schema<IStudent>(
           enum: ['beginner', 'intermediate', 'advanced'],
         },
         acquiredAt: { type: Date, default: Date.now },
+        competenceType: {
+          type: String,
+          enum: ['self_reported', 'course_exposure', 'project_demonstrated', 'verified'],
+          default: 'self_reported',
+        },
+        evidenceDescription: { type: String },
       },
     ],
     completedCourses: [
@@ -375,14 +431,41 @@ export const StudentSchema = new Schema<IStudent>(
         courseId: { type: String, required: true },
         grade: {
           type: String,
-          required: true,
-          enum: ['A+', 'A', 'B+', 'B', 'C'],
+          default: 'A',
         },
-        completedSemester: { type: Number, required: true },
+        completedSemester: { type: Number, default: 1 },
         completedAt: { type: Date, default: Date.now },
+        status: {
+          type: String,
+          enum: ['completed', 'in_progress', 'planned'],
+          default: 'completed',
+        },
       },
     ],
     projectIds: [{ type: String }],
+    customProjects: [
+      {
+        projectId: { type: String, required: true },
+        title: { type: String, required: true },
+        description: { type: String },
+        technologiesUsed: [{ type: String }],
+        skillsDemonstrated: [{ type: String }],
+        role: { type: String },
+        link: { type: String },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+    certifications: [
+      {
+        name: { type: String, required: true },
+        issuer: { type: String, required: true },
+        issueDate: { type: Date },
+        credentialUrl: { type: String },
+        associatedSkillIds: [{ type: String }],
+      },
+    ],
+    savedRoleIds: [{ type: String }],
+    savedJobIds: [{ type: String }],
     clubMemberships: [
       {
         clubId: { type: String, required: true },

@@ -63,6 +63,37 @@ export const joinClub = asyncHandler(async (req: Request, res: Response) => {
   ok(res, student, 'Club membership added');
 });
 
+export const onboardStudent = asyncHandler(async (req: Request, res: Response) => {
+  const studentId = req.body.studentId || (req.params.studentId as string) || `STU_${Date.now()}`;
+  const student = await studentService.onboardOrUpdateStudent(studentId, req.body);
+  ok(res, student, 'Student profile onboarded/updated successfully', 200);
+});
+
+export const getProfileSummary = asyncHandler(async (req: Request, res: Response) => {
+  const summary = await studentService.getProfileSummary(req.params.studentId);
+  ok(res, summary, 'Student profile summary retrieved successfully');
+});
+
+export const removeSkill = asyncHandler(async (req: Request, res: Response) => {
+  const student = await studentService.removeSkill(req.params.studentId, req.params.skillId);
+  ok(res, student, 'Skill removed successfully');
+});
+
+export const removeCompletedCourse = asyncHandler(async (req: Request, res: Response) => {
+  const student = await studentService.removeCompletedCourse(req.params.studentId, req.params.courseId);
+  ok(res, student, 'Completed course removed successfully');
+});
+
+export const addCustomProject = asyncHandler(async (req: Request, res: Response) => {
+  const student = await studentService.addOrUpdateCustomProject(req.params.studentId, req.body);
+  ok(res, student, 'Project added successfully');
+});
+
+export const removeCustomProject = asyncHandler(async (req: Request, res: Response) => {
+  const student = await studentService.removeCustomProject(req.params.studentId, req.params.projectId);
+  ok(res, student, 'Project removed successfully');
+});
+
 export const attendEvent = asyncHandler(async (req: Request, res: Response) => {
   const { eventId } = req.body;
   const student = await studentService.attendEvent(req.params.studentId, eventId);
