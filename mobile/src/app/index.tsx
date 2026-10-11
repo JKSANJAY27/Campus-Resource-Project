@@ -17,9 +17,9 @@ import { getPersistedStudentId } from '../api/client';
 
 export default function WelcomeScreen() {
   useEffect(() => {
-    // If already onboarded, skip to profile
+    // If already onboarded, skip to dashboard
     getPersistedStudentId().then((id) => {
-      if (id) router.replace('/profile');
+      if (id) router.replace('/(tabs)');
     });
   }, []);
 

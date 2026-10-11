@@ -126,10 +126,10 @@ export default function SubmittingScreen() {
             <Text style={styles.idValue}>{studentId}</Text>
           </View>
           <Button
-            label="View My Profile →"
+            label="Open Dashboard & Recommendations →"
             onPress={() => {
               reset();
-              router.replace('/profile');
+              router.replace('/(tabs)');
             }}
             size="lg"
             style={styles.profileBtn}

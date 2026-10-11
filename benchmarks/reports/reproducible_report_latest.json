@@ -1,6 +1,6 @@
 {
-  "reportId": "REP_1791714188466",
-  "timestamp": "2026-10-11T10:23:08.466Z",
+  "reportId": "REP_1791718311647",
+  "timestamp": "2026-10-11T11:31:51.647Z",
   "datasetScale": "5K",
   "warmupIterations": 2,
   "measurementIterations": 5,
@@ -19,12 +19,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 4.155,
-      "medianMs": 4.13,
-      "p95Ms": 4.409,
-      "minMs": 3.833,
-      "maxMs": 4.409,
-      "throughputOpsSec": 240.7,
+      "avgMs": 4.144,
+      "medianMs": 4.238,
+      "p95Ms": 4.386,
+      "minMs": 3.785,
+      "maxMs": 4.386,
+      "throughputOpsSec": 241.3,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -32,11 +32,11 @@
       },
       "notes": "B-Tree logarithmic search O(log N). Highly efficient point seek on scale 5K (~5,000 docs).",
       "rawSamplesMs": [
-        3.833,
-        4.032,
-        4.13,
-        4.369,
-        4.409
+        3.785,
+        4.023,
+        4.238,
+        4.288,
+        4.386
       ]
     },
     {
@@ -46,12 +46,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 16.436,
-      "medianMs": 16.025,
-      "p95Ms": 18.023,
-      "minMs": 15.756,
-      "maxMs": 18.023,
-      "throughputOpsSec": 60.8,
+      "avgMs": 16.901,
+      "medianMs": 17.184,
+      "p95Ms": 17.729,
+      "minMs": 15.918,
+      "maxMs": 17.729,
+      "throughputOpsSec": 59.2,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -59,11 +59,11 @@
       },
       "notes": "Linear complexity O(N). Scans every document sequentially. Shows dramatic latency increase at scale 5K.",
       "rawSamplesMs": [
-        15.756,
-        15.804,
-        16.025,
-        16.574,
-        18.023
+        15.918,
+        15.952,
+        17.184,
+        17.722,
+        17.729
       ]
     },
     {
@@ -73,12 +73,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 20.13,
-      "medianMs": 20.863,
-      "p95Ms": 21.356,
-      "minMs": 18.165,
-      "maxMs": 21.356,
-      "throughputOpsSec": 49.7,
+      "avgMs": 20.483,
+      "medianMs": 20.257,
+      "p95Ms": 21.306,
+      "minMs": 20.147,
+      "maxMs": 21.306,
+      "throughputOpsSec": 48.8,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -86,11 +86,11 @@
       },
       "notes": "WiredTiger aggregation pipeline with document deconstruction and accumulator aggregation at scale 5K.",
       "rawSamplesMs": [
-        18.165,
-        19.345,
-        20.863,
-        20.922,
-        21.356
+        20.147,
+        20.218,
+        20.257,
+        20.489,
+        21.306
       ]
     },
     {
@@ -100,12 +100,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 3.165,
-      "medianMs": 3.15,
-      "p95Ms": 3.642,
-      "minMs": 2.885,
-      "maxMs": 3.642,
-      "throughputOpsSec": 316,
+      "avgMs": 3.581,
+      "medianMs": 3.771,
+      "p95Ms": 3.92,
+      "minMs": 2.876,
+      "maxMs": 3.92,
+      "throughputOpsSec": 279.2,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -113,11 +113,11 @@
       },
       "notes": "Index-Free Adjacency: O(k) complexity proportional only to node degree k, invariant to global graph scale.",
       "rawSamplesMs": [
-        2.885,
-        2.989,
-        3.15,
-        3.158,
-        3.642
+        2.876,
+        3.459,
+        3.771,
+        3.881,
+        3.92
       ]
     },
     {
@@ -127,12 +127,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 6.511,
-      "medianMs": 6.376,
-      "p95Ms": 7.109,
-      "minMs": 5.915,
-      "maxMs": 7.109,
-      "throughputOpsSec": 153.6,
+      "avgMs": 6.125,
+      "medianMs": 6.288,
+      "p95Ms": 6.56,
+      "minMs": 5.521,
+      "maxMs": 6.56,
+      "throughputOpsSec": 163.3,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -140,11 +140,11 @@
       },
       "notes": "Replaces 2-table relational join with direct pointer chaining.",
       "rawSamplesMs": [
-        5.915,
-        6.346,
-        6.376,
-        6.811,
-        7.109
+        5.521,
+        5.912,
+        6.288,
+        6.344,
+        6.56
       ]
     },
     {
@@ -154,12 +154,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 11.276,
-      "medianMs": 11.517,
-      "p95Ms": 12.342,
-      "minMs": 10.149,
-      "maxMs": 12.342,
-      "throughputOpsSec": 88.7,
+      "avgMs": 10.075,
+      "medianMs": 9.854,
+      "p95Ms": 11,
+      "minMs": 9.295,
+      "maxMs": 11,
+      "throughputOpsSec": 99.3,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -167,11 +167,11 @@
       },
       "notes": "Transitive closure evaluation without recursive SQL Common Table Expression (CTE) table scans.",
       "rawSamplesMs": [
-        10.149,
-        10.824,
-        11.517,
-        11.547,
-        12.342
+        9.295,
+        9.447,
+        9.854,
+        10.778,
+        11
       ]
     },
     {
@@ -181,12 +181,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 8.688,
-      "medianMs": 8.864,
-      "p95Ms": 9.001,
-      "minMs": 7.853,
-      "maxMs": 9.001,
-      "throughputOpsSec": 115.1,
+      "avgMs": 8.52,
+      "medianMs": 8.235,
+      "p95Ms": 9.577,
+      "minMs": 7.637,
+      "maxMs": 9.577,
+      "throughputOpsSec": 117.4,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -194,11 +194,11 @@
       },
       "notes": "Bidirectional Breadth-First Search navigating pointer records natively.",
       "rawSamplesMs": [
-        7.853,
-        8.726,
-        8.864,
-        8.996,
-        9.001
+        7.637,
+        8.162,
+        8.235,
+        8.989,
+        9.577
       ]
     },
     {
@@ -208,12 +208,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 11.619,
-      "medianMs": 10.692,
-      "p95Ms": 13.838,
-      "minMs": 10.198,
-      "maxMs": 13.838,
-      "throughputOpsSec": 86.1,
+      "avgMs": 12.168,
+      "medianMs": 12.249,
+      "p95Ms": 13.516,
+      "minMs": 10.539,
+      "maxMs": 13.516,
+      "throughputOpsSec": 82.2,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -221,11 +221,11 @@
       },
       "notes": "Evaluates complex neighborhood overlaps and prerequisite satisfaction in a single graph transaction.",
       "rawSamplesMs": [
-        10.198,
-        10.281,
-        10.692,
-        13.088,
-        13.838
+        10.539,
+        11.644,
+        12.249,
+        12.893,
+        13.516
       ]
     },
     {
@@ -235,12 +235,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 0.698,
-      "medianMs": 0.671,
-      "p95Ms": 0.894,
-      "minMs": 0.524,
-      "maxMs": 0.894,
-      "throughputOpsSec": 1432.3,
+      "avgMs": 0.8,
+      "medianMs": 0.77,
+      "p95Ms": 1.041,
+      "minMs": 0.541,
+      "maxMs": 1.041,
+      "throughputOpsSec": 1250,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -248,11 +248,11 @@
       },
       "notes": "O(1) hash map lookup. Serves responses in sub-millisecond latency directly from system RAM.",
       "rawSamplesMs": [
-        0.524,
-        0.586,
-        0.671,
-        0.816,
-        0.894
+        0.541,
+        0.733,
+        0.77,
+        0.915,
+        1.041
       ]
     },
     {
@@ -262,12 +262,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 19.928,
-      "medianMs": 21.105,
-      "p95Ms": 26.871,
-      "minMs": 13.729,
-      "maxMs": 26.871,
-      "throughputOpsSec": 50.2,
+      "avgMs": 18.779,
+      "medianMs": 16.787,
+      "p95Ms": 27.733,
+      "minMs": 15.404,
+      "maxMs": 27.733,
+      "throughputOpsSec": 53.3,
       "environment": {
         "isLiveDb": true,
         "nodeVersion": "v22.15.0",
@@ -275,11 +275,11 @@
       },
       "notes": "Demonstrates baseline database latency when cache is bypassed, enduring query parsing and disk seek overhead.",
       "rawSamplesMs": [
-        13.72899999999936,
-        16.230900000000474,
-        21.10490000000027,
-        21.705399999999827,
-        26.871399999999994
+        15.403699999999844,
+        16.53400000000056,
+        16.786799999999857,
+        17.4359000000004,
+        27.73279999999977
       ]
     },
     {
@@ -289,12 +289,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 1.014,
-      "medianMs": 1.037,
-      "p95Ms": 1.098,
-      "minMs": 0.825,
-      "maxMs": 1.098,
-      "throughputOpsSec": 986.4,
+      "avgMs": 0.888,
+      "medianMs": 0.86,
+      "p95Ms": 1.038,
+      "minMs": 0.796,
+      "maxMs": 1.038,
+      "throughputOpsSec": 1126.4,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -302,11 +302,11 @@
       },
       "notes": "Fast path. Increments cache hit counter and returns pre-serialized data directly.",
       "rawSamplesMs": [
-        0.825,
-        1.014,
-        1.037,
-        1.095,
-        1.098
+        0.796,
+        0.847,
+        0.86,
+        0.898,
+        1.038
       ]
     },
     {
@@ -316,12 +316,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 15.403,
-      "medianMs": 15.481,
-      "p95Ms": 16.277,
-      "minMs": 14.649,
-      "maxMs": 16.277,
-      "throughputOpsSec": 64.9,
+      "avgMs": 15.781,
+      "medianMs": 15.137,
+      "p95Ms": 17.48,
+      "minMs": 14.04,
+      "maxMs": 17.48,
+      "throughputOpsSec": 63.4,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -329,11 +329,11 @@
       },
       "notes": "Slow path. Absorbs network trip to primary store before warming the cache for subsequent requests.",
       "rawSamplesMs": [
-        14.649,
-        15.06,
-        15.481,
-        15.55,
-        16.277
+        14.04,
+        14.877,
+        15.137,
+        17.369,
+        17.48
       ]
     },
     {
@@ -343,12 +343,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 4.176,
-      "medianMs": 4.211,
-      "p95Ms": 4.923,
-      "minMs": 3.493,
-      "maxMs": 4.923,
-      "throughputOpsSec": 239.5,
+      "avgMs": 4.159,
+      "medianMs": 4.244,
+      "p95Ms": 4.505,
+      "minMs": 3.463,
+      "maxMs": 4.505,
+      "throughputOpsSec": 240.5,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -356,11 +356,11 @@
       },
       "notes": "Consistent hashing locates the target node directly using Murmur3 token; zero cluster broadcast.",
       "rawSamplesMs": [
-        3.493,
-        3.499,
+        3.463,
         4.211,
-        4.754,
-        4.923
+        4.244,
+        4.371,
+        4.505
       ]
     },
     {
@@ -370,12 +370,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 7.063,
-      "medianMs": 6.812,
-      "p95Ms": 7.632,
-      "minMs": 6.607,
-      "maxMs": 7.632,
-      "throughputOpsSec": 141.6,
+      "avgMs": 6.379,
+      "medianMs": 6.31,
+      "p95Ms": 7.55,
+      "minMs": 5.282,
+      "maxMs": 7.55,
+      "throughputOpsSec": 156.8,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -383,11 +383,11 @@
       },
       "notes": "Sequential on-disk scan inside SSTable partition. Avoids in-memory sorting via CLUSTERING ORDER BY.",
       "rawSamplesMs": [
-        6.607,
-        6.795,
-        6.812,
-        7.471,
-        7.632
+        5.282,
+        5.897,
+        6.31,
+        6.856,
+        7.55
       ]
     },
     {
@@ -397,12 +397,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 10.905,
-      "medianMs": 11.092,
-      "p95Ms": 12.897,
-      "minMs": 8.861,
-      "maxMs": 12.897,
-      "throughputOpsSec": 91.7,
+      "avgMs": 11.003,
+      "medianMs": 10.831,
+      "p95Ms": 12.729,
+      "minMs": 9.295,
+      "maxMs": 12.729,
+      "throughputOpsSec": 90.9,
       "environment": {
         "isLiveDb": false,
         "nodeVersion": "v22.15.0",
@@ -410,11 +410,11 @@
       },
       "notes": "Streams sequential rows from local SSTables. Memory overhead bounded by partition paging size.",
       "rawSamplesMs": [
-        8.861,
-        9.122,
-        11.092,
-        12.555,
-        12.897
+        9.295,
+        10.647,
+        10.831,
+        11.514,
+        12.729
       ]
     },
     {
@@ -424,12 +424,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 14.82,
-      "medianMs": 14.598,
-      "p95Ms": 16.696,
-      "minMs": 12.474,
-      "maxMs": 16.696,
-      "throughputOpsSec": 67.5,
+      "avgMs": 14.7,
+      "medianMs": 13.778,
+      "p95Ms": 16.533,
+      "minMs": 13.21,
+      "maxMs": 16.533,
+      "throughputOpsSec": 68,
       "environment": {
         "isLiveDb": true,
         "nodeVersion": "v22.15.0",
@@ -437,11 +437,11 @@
       },
       "notes": "Combines Neo4j graph neighborhood queries, weighted scoring formula, and explanation generation.",
       "rawSamplesMs": [
-        12.474,
-        14.221,
-        14.598,
-        16.113,
-        16.696
+        13.21,
+        13.704,
+        13.778,
+        16.273,
+        16.533
       ]
     },
     {
@@ -451,12 +451,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 11.591,
-      "medianMs": 12.264,
-      "p95Ms": 12.777,
-      "minMs": 9.278,
-      "maxMs": 12.777,
-      "throughputOpsSec": 86.3,
+      "avgMs": 10.507,
+      "medianMs": 9.878,
+      "p95Ms": 12.809,
+      "minMs": 9.448,
+      "maxMs": 12.809,
+      "throughputOpsSec": 95.2,
       "environment": {
         "isLiveDb": true,
         "nodeVersion": "v22.15.0",
@@ -464,11 +464,11 @@
       },
       "notes": "Extracts missing required skills and evaluates readiness score percentage in application layer.",
       "rawSamplesMs": [
-        9.278,
-        11.105,
-        12.264,
-        12.529,
-        12.777
+        9.448,
+        9.73,
+        9.878,
+        10.672,
+        12.809
       ]
     },
     {
@@ -478,12 +478,12 @@
       "datasetScale": "5K",
       "runs": 5,
       "warmupRuns": 2,
-      "avgMs": 18.216,
-      "medianMs": 17.755,
-      "p95Ms": 20.523,
-      "minMs": 17.001,
-      "maxMs": 20.523,
-      "throughputOpsSec": 54.9,
+      "avgMs": 17.12,
+      "medianMs": 17.137,
+      "p95Ms": 19.025,
+      "minMs": 15.566,
+      "maxMs": 19.025,
+      "throughputOpsSec": 58.4,
       "environment": {
         "isLiveDb": true,
         "nodeVersion": "v22.15.0",
@@ -491,11 +491,11 @@
       },
       "notes": "Executes Kahn algorithm over skill dependency DAG ensuring zero cycle deadlocks.",
       "rawSamplesMs": [
-        17.001,
-        17.532,
-        17.755,
-        18.271,
-        20.523
+        15.566,
+        16.575,
+        17.137,
+        17.295,
+        19.025
       ]
     }
   ],

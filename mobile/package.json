@@ -3,30 +3,33 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@react-native-async-storage/async-storage": "2.1.2",
     "expo": "~57.0.27",
-    "expo-status-bar": "~57.0.1",
-    "expo-router": "~5.1.0",
     "expo-font": "~13.3.1",
+    "expo-router": "~5.1.0",
     "expo-splash-screen": "~0.30.8",
+    "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-native": "0.86.3",
-    "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.5.0",
-    "@react-native-async-storage/async-storage": "2.1.2",
+    "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",
-    "react-native-gesture-handler": "~2.24.0"
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.5.0"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "babel-plugin-module-resolver": "^5.0.2",
     "typescript": "~6.0.3",
-    "babel-plugin-module-resolver": "^5.0.2"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
   },
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test": "vitest run"
   },
   "private": true
 }
