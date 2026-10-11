@@ -203,6 +203,50 @@ export class StudentRepository extends BaseMongoRepository<IStudent> {
     ).exec();
   }
 
+  /** Save a career pathway for the student (upsert by roleId) */
+  public async savePathway(
+    studentId: string,
+    roleId: string,
+    roleTitle: string,
+    notes?: string
+  ): Promise<IStudent | null> {
+    // Remove any existing entry for this roleId first
+    await this.model.updateOne(
+      { studentId },
+      { $pull: { savedPathways: { roleId } } } as any
+    ).exec();
+
+    return this.model.findOneAndUpdate(
+      { studentId },
+      {
+        $push: {
+          savedPathways: {
+            roleId,
+            roleTitle,
+            savedAt: new Date(),
+            ...(notes ? { notes } : {}),
+          },
+        },
+      } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Remove a saved pathway by roleId */
+  public async removeSavedPathway(studentId: string, roleId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $pull: { savedPathways: { roleId } } } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Retrieve saved pathways for a student */
+  public async getSavedPathways(studentId: string): Promise<IStudent['savedPathways']> {
+    const student = await this.model.findOne({ studentId }, { savedPathways: 1 }).exec();
+    return student?.savedPathways ?? [];
+  }
+
   // ──────────────────────────────────────────────────────
   // AGGREGATION PIPELINES
   // ──────────────────────────────────────────────────────

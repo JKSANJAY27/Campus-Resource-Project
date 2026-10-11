@@ -824,6 +824,185 @@ export class CareerDiscoveryService {
 
     return input;
   }
+  // ──────────────────────────────────────────────────────────────────────
+  // A. Career-to-Learning: Student specifies a target role
+  // ──────────────────────────────────────────────────────────────────────
+
+  /**
+   * Generates a personalised learning path for a single target role.
+   * Supports both a student ID lookup and a raw profile payload.
+   */
+  public async getCareerToLearningPath(
+    input: string | StudentProfileInput,
+    targetRoleId: string
+  ): Promise<RoleRecommendation> {
+    const profile = await this.resolveStudentProfile(input);
+    const roles = await this.loadAllRoles();
+    const role = roles.find((r) => r.roleId === targetRoleId || r.slug === targetRoleId);
+
+    if (!role) {
+      throw Object.assign(
+        new Error(`Career role not found: ${targetRoleId}`),
+        { status: 404 }
+      );
+    }
+
+    let allCourses: any[] = [];
+    let allProjects: any[] = [];
+    let allJobs: any[] = [];
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const [cRes, pRes, jRes] = await Promise.all([
+          courseRepository.findAll({ limit: 100 }),
+          projectRepository.findAll({ limit: 100 }),
+          jobRepository.findAll({ limit: 100 }),
+        ]);
+        allCourses = cRes.data;
+        allProjects = pRes.data;
+        allJobs = jRes.data;
+      } catch {
+        // Fallback to empty context
+      }
+    }
+
+    return this.evaluateSingleRole(role, profile, {
+      courses: allCourses || [],
+      projects: allProjects || [],
+      jobs: allJobs || [],
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Side-by-side pathway comparison
+  // ──────────────────────────────────────────────────────────────────────
+
+  /**
+   * Compares multiple target roles side by side for a given student profile.
+   * At most 5 role IDs are accepted to keep responses manageable.
+   */
+  public async comparePathways(
+    input: string | StudentProfileInput,
+    roleIds: string[]
+  ): Promise<{
+    studentId?: string;
+    studentName?: string;
+    comparedRolesCount: number;
+    pathways: RoleRecommendation[];
+  }> {
+    if (!roleIds || roleIds.length === 0) {
+      throw Object.assign(new Error('At least one roleId is required for comparison.'), { status: 400 });
+    }
+    if (roleIds.length > 5) {
+      throw Object.assign(new Error('At most 5 roles can be compared simultaneously.'), { status: 400 });
+    }
+
+    const profile = await this.resolveStudentProfile(input);
+
+    let allCourses: any[] = [];
+    let allProjects: any[] = [];
+    let allJobs: any[] = [];
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const [cRes, pRes, jRes] = await Promise.all([
+          courseRepository.findAll({ limit: 100 }),
+          projectRepository.findAll({ limit: 100 }),
+          jobRepository.findAll({ limit: 100 }),
+        ]);
+        allCourses = cRes.data;
+        allProjects = pRes.data;
+        allJobs = jRes.data;
+      } catch {
+        // Fallback to empty context
+      }
+    }
+
+    const allRoles = await this.loadAllRoles();
+
+    const pathways: RoleRecommendation[] = [];
+
+    for (const rid of roleIds) {
+      const role = allRoles.find((r) => r.roleId === rid || r.slug === rid);
+      if (!role) {
+        throw Object.assign(new Error(`Career role not found: ${rid}`), { status: 404 });
+      }
+      const rec = await this.evaluateSingleRole(role, profile, {
+        courses: allCourses || [],
+        projects: allProjects || [],
+        jobs: allJobs || [],
+      });
+      pathways.push(rec);
+    }
+
+    // Order by descending compatibility score so the best match leads
+    pathways.sort((a, b) => b.compatibilityScore - a.compatibilityScore);
+
+    return {
+      studentId: profile.studentId,
+      studentName: profile.name,
+      comparedRolesCount: pathways.length,
+      pathways,
+    };
+  }
+
+  // ──────────────────────────────────────────────────────────────────────
+  // Pathway persistence helpers (delegate to StudentRepository)
+  // ──────────────────────────────────────────────────────────────────────
+
+  /**
+   * Persists a chosen pathway to the student's profile in MongoDB.
+   * Does nothing (no error) when MongoDB is unavailable.
+   */
+  public async savePathway(
+    studentId: string,
+    roleId: string,
+    roleTitle: string,
+    notes?: string
+  ): Promise<{ saved: boolean; message: string }> {
+    if (mongoose.connection.readyState !== 1) {
+      return { saved: false, message: 'MongoDB is not connected; pathway cannot be persisted.' };
+    }
+
+    const updated = await studentRepository.savePathway(studentId, roleId, roleTitle, notes);
+    if (!updated) {
+      throw Object.assign(new Error(`Student profile not found: ${studentId}`), { status: 404 });
+    }
+
+    return { saved: true, message: `Pathway for '${roleTitle}' saved to student profile.` };
+  }
+
+  /**
+   * Removes a previously saved pathway from the student's profile.
+   */
+  public async removeSavedPathway(
+    studentId: string,
+    roleId: string
+  ): Promise<{ removed: boolean; message: string }> {
+    if (mongoose.connection.readyState !== 1) {
+      return { removed: false, message: 'MongoDB is not connected; pathway cannot be removed.' };
+    }
+
+    const updated = await studentRepository.removeSavedPathway(studentId, roleId);
+    if (!updated) {
+      throw Object.assign(new Error(`Student profile not found: ${studentId}`), { status: 404 });
+    }
+
+    return { removed: true, message: 'Pathway removed from student profile.' };
+  }
+
+  /**
+   * Returns the list of pathways the student has previously saved.
+   */
+  public async getSavedPathways(
+    studentId: string
+  ): Promise<Array<{ roleId: string; roleTitle: string; savedAt: Date; notes?: string }>> {
+    if (mongoose.connection.readyState !== 1) {
+      return [];
+    }
+    const pathways = await studentRepository.getSavedPathways(studentId);
+    return (pathways ?? []) as Array<{ roleId: string; roleTitle: string; savedAt: Date; notes?: string }>;
+  }
 }
 
 export const careerDiscoveryService = new CareerDiscoveryService();

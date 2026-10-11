@@ -372,6 +372,12 @@ export interface IStudent extends Document {
   customProjects?: IStudentCustomProject[];
   certifications?: IStudentCertification[];
   savedRoleIds?: string[];
+  savedPathways?: Array<{
+    roleId: string;
+    roleTitle: string;
+    savedAt: Date;
+    notes?: string;
+  }>;
   savedJobIds?: string[];
   clubMemberships: {
     clubId: string;
@@ -465,6 +471,14 @@ export const StudentSchema = new Schema<IStudent>(
       },
     ],
     savedRoleIds: [{ type: String }],
+    savedPathways: [
+      {
+        roleId: { type: String, required: true },
+        roleTitle: { type: String, required: true },
+        savedAt: { type: Date, default: Date.now },
+        notes: { type: String },
+      },
+    ],
     savedJobIds: [{ type: String }],
     clubMemberships: [
       {

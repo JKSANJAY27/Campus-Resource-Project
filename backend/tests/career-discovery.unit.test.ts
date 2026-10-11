@@ -351,4 +351,182 @@ describe('Learning-to-Career Discovery Module - Unit Tests', () => {
       expect(deRole!.compatibilityScore).toBeGreaterThan(feRole!.compatibilityScore);
     });
   });
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // 6. Career-to-Learning: Student selects a target role
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('6. Career-to-Learning: getCareerToLearningPath', () => {
+    const partialStudent: StudentProfileInput = {
+      studentId: 'stu_career_target_001',
+      name: 'Meera Nair',
+      currentSemester: 5,
+      cgpa: 8.5,
+      skills: [
+        { skillId: 'sk_python', level: 'intermediate', competenceType: 'project_demonstrated' },
+        { skillId: 'sk_sql', level: 'intermediate', competenceType: 'course_exposure' },
+      ],
+    };
+
+    it('should return a single RoleRecommendation for the requested target role', async () => {
+      const rec = await careerDiscoveryService.getCareerToLearningPath(
+        partialStudent,
+        'role_data_analyst'
+      );
+
+      expect(rec).toBeDefined();
+      expect(rec.roleId).toBe('role_data_analyst');
+      expect(rec.title).toBe('Data Analyst');
+      expect(rec.compatibilityScore).toBeGreaterThanOrEqual(0);
+      expect(rec.compatibilityScore).toBeLessThanOrEqual(100);
+    });
+
+    it('should produce a non-empty learning path because required skills are missing', async () => {
+      const rec = await careerDiscoveryService.getCareerToLearningPath(
+        partialStudent,
+        'role_data_analyst'
+      );
+
+      // Meera has python + sql but likely missing data visualisation and cloud skills
+      expect(rec.learningPath.length).toBeGreaterThan(0);
+      expect(rec.learningPath[0].step).toBe(1);
+      expect(rec.learningPath[0].reason).toBeDefined();
+    });
+
+    it('should throw 404 for an unknown roleId', async () => {
+      await expect(
+        careerDiscoveryService.getCareerToLearningPath(partialStudent, 'role_does_not_exist_xyz')
+      ).rejects.toMatchObject({ status: 404 });
+    });
+
+    it('should respect roleId OR slug as the identifier', async () => {
+      const bySlug = await careerDiscoveryService.getCareerToLearningPath(
+        partialStudent,
+        'data-analyst'
+      );
+      const byId = await careerDiscoveryService.getCareerToLearningPath(
+        partialStudent,
+        'role_data_analyst'
+      );
+
+      expect(bySlug.roleId).toBe(byId.roleId);
+      expect(bySlug.compatibilityScore).toBe(byId.compatibilityScore);
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // 7. Side-by-side Pathway Comparison: comparePathways
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('7. Side-by-side Pathway Comparison: comparePathways', () => {
+    const mlStudent: StudentProfileInput = {
+      studentId: 'stu_compare_001',
+      name: 'Arjun Patel',
+      currentSemester: 6,
+      cgpa: 8.8,
+      interests: ['Data Science & AI'],
+      skills: [
+        { skillId: 'sk_python', level: 'advanced', competenceType: 'project_demonstrated' },
+        { skillId: 'sk_math_stats', level: 'advanced', competenceType: 'verified' },
+        { skillId: 'sk_data_analysis', level: 'advanced', competenceType: 'project_demonstrated' },
+        { skillId: 'sk_ml', level: 'intermediate', competenceType: 'project_demonstrated' },
+      ],
+    };
+
+    it('should return one pathway per requested roleId ordered by descending score', async () => {
+      const result = await careerDiscoveryService.comparePathways(mlStudent, [
+        'role_ml_engineer',
+        'role_data_analyst',
+        'role_frontend_developer',
+      ]);
+
+      expect(result.comparedRolesCount).toBe(3);
+      expect(result.pathways).toHaveLength(3);
+
+      // Pathways must be sorted descending by compatibilityScore
+      const scores = result.pathways.map((p) => p.compatibilityScore);
+      for (let i = 0; i < scores.length - 1; i++) {
+        expect(scores[i]).toBeGreaterThanOrEqual(scores[i + 1]);
+      }
+
+      // ML and Data Analyst should rank higher than Frontend for Arjun
+      const mlRec = result.pathways.find((p) => p.title === 'Machine Learning Engineer');
+      const feRec = result.pathways.find((p) => p.title === 'Frontend Developer');
+      expect(mlRec).toBeDefined();
+      expect(feRec).toBeDefined();
+      expect(mlRec!.compatibilityScore).toBeGreaterThan(feRec!.compatibilityScore);
+    });
+
+    it('should include full score breakdowns, missing skills, and learning paths for each pathway', async () => {
+      const result = await careerDiscoveryService.comparePathways(mlStudent, [
+        'role_ml_engineer',
+        'role_data_engineer',
+      ]);
+
+      for (const pathway of result.pathways) {
+        expect(pathway.scoreBreakdown).toBeDefined();
+        expect(pathway.scoreBreakdown.coreSkillsPoints).toBeGreaterThanOrEqual(0);
+        expect(pathway.matchingSkills).toBeDefined();
+        expect(pathway.missingSkills).toBeDefined();
+        expect(pathway.learningPath).toBeDefined();
+        expect(pathway.explanation).toBeTruthy();
+      }
+    });
+
+    it('should throw 400 when roleIds array is empty', async () => {
+      await expect(careerDiscoveryService.comparePathways(mlStudent, [])).rejects.toMatchObject({
+        status: 400,
+      });
+    });
+
+    it('should throw 400 when more than 5 roleIds are requested', async () => {
+      await expect(
+        careerDiscoveryService.comparePathways(mlStudent, [
+          'role_ml_engineer',
+          'role_data_analyst',
+          'role_frontend_developer',
+          'role_backend_developer',
+          'role_cloud_engineer',
+          'role_devops_engineer',
+        ])
+      ).rejects.toMatchObject({ status: 400 });
+    });
+
+    it('should throw 404 for an unknown roleId in the comparison list', async () => {
+      await expect(
+        careerDiscoveryService.comparePathways(mlStudent, ['role_ml_engineer', 'role_xyz_unknown'])
+      ).rejects.toMatchObject({ status: 404 });
+    });
+  });
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // 8. Pathway Saving: savePathway / removeSavedPathway / getSavedPathways
+  // ──────────────────────────────────────────────────────────────────────────
+  describe('8. Pathway Persistence (MongoDB offline — service-level contract)', () => {
+    it('savePathway should return saved:false when MongoDB is not available', async () => {
+      // Without a live Mongo connection the service should gracefully degrade
+      const result = await careerDiscoveryService.savePathway(
+        'stu_offline_test',
+        'role_frontend_developer',
+        'Frontend Developer',
+        'My preferred pathway'
+      );
+      // readyState 0 → disconnected in unit test environment
+      expect(result.saved).toBe(false);
+      expect(result.message).toBeTruthy();
+    });
+
+    it('removeSavedPathway should return removed:false when MongoDB is not available', async () => {
+      const result = await careerDiscoveryService.removeSavedPathway(
+        'stu_offline_test',
+        'role_frontend_developer'
+      );
+      expect(result.removed).toBe(false);
+    });
+
+    it('getSavedPathways should return empty array when MongoDB is not available', async () => {
+      const pathways = await careerDiscoveryService.getSavedPathways('stu_offline_test');
+      expect(Array.isArray(pathways)).toBe(true);
+      expect(pathways.length).toBe(0);
+    });
+  });
 });
+
