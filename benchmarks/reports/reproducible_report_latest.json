@@ -1,0 +1,532 @@
+{
+  "reportId": "REP_1791710549880",
+  "timestamp": "2026-10-11T09:22:29.880Z",
+  "datasetScale": "5K",
+  "warmupIterations": 2,
+  "measurementIterations": 5,
+  "environmentalFactors": {
+    "os": "win32",
+    "nodeVersion": "v22.15.0",
+    "platform": "Local development environment (Docker containerized NoSQL databases on host SSD)",
+    "hardwareNotes": "Intel/AMD x86_64 CPU with single-node localhost network loopback (sub-0.1ms wire latency)",
+    "environmentalLimitations": "Absolute milliseconds reflect local single-node hardware. Real-world multi-datacenter clusters will experience cross-rack network hops (1-5ms), disk fsync throttles, and concurrent connection pool queuing. Relative algorithmic orders of growth (O(1), O(log N), O(N), O(k)) remain valid."
+  },
+  "results": [
+    {
+      "database": "MongoDB",
+      "operation": "Indexed Point Lookup",
+      "description": "Queries student by indexed studentId field using WiredTiger clustered B-Tree index.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 4.094,
+      "medianMs": 3.96,
+      "p95Ms": 4.445,
+      "minMs": 3.864,
+      "maxMs": 4.445,
+      "throughputOpsSec": 244.3,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "B-Tree logarithmic search O(log N). Highly efficient point seek on scale 5K (~5,000 docs).",
+      "rawSamplesMs": [
+        3.864,
+        3.893,
+        3.96,
+        4.307,
+        4.445
+      ]
+    },
+    {
+      "database": "MongoDB",
+      "operation": "Non-Indexed Collection Scan",
+      "description": "Queries student by non-indexed regex pattern forcing full collection scan (COLLSCAN).",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 16.582,
+      "medianMs": 15.966,
+      "p95Ms": 17.753,
+      "minMs": 15.754,
+      "maxMs": 17.753,
+      "throughputOpsSec": 60.3,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Linear complexity O(N). Scans every document sequentially. Shows dramatic latency increase at scale 5K.",
+      "rawSamplesMs": [
+        15.754,
+        15.944,
+        15.966,
+        17.491,
+        17.753
+      ]
+    },
+    {
+      "database": "MongoDB",
+      "operation": "Multi-Stage Aggregation Pipeline",
+      "description": "Multi-stage aggregation pipeline ($match -> $unwind -> $group -> $sort) analyzing department skills.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 19.7,
+      "medianMs": 19.822,
+      "p95Ms": 21.327,
+      "minMs": 18.183,
+      "maxMs": 21.327,
+      "throughputOpsSec": 50.8,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "WiredTiger aggregation pipeline with document deconstruction and accumulator aggregation at scale 5K.",
+      "rawSamplesMs": [
+        18.183,
+        19.19,
+        19.822,
+        19.98,
+        21.327
+      ]
+    },
+    {
+      "database": "Neo4j",
+      "operation": "1-Hop Neighbor Traversal",
+      "description": "Traverses direct student-to-skill outgoing edges (:Student)-[:STUDENT_HAS_SKILL]->(:Skill).",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 3.171,
+      "medianMs": 3.151,
+      "p95Ms": 3.406,
+      "minMs": 2.82,
+      "maxMs": 3.406,
+      "throughputOpsSec": 315.4,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Index-Free Adjacency: O(k) complexity proportional only to node degree k, invariant to global graph scale.",
+      "rawSamplesMs": [
+        2.82,
+        3.083,
+        3.151,
+        3.394,
+        3.406
+      ]
+    },
+    {
+      "database": "Neo4j",
+      "operation": "2-Hop Graph Traversal",
+      "description": "Traverses student skills to candidate courses sharing those skills: (:Student)->(:Skill)<-(:Course).",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 6.217,
+      "medianMs": 5.772,
+      "p95Ms": 7.08,
+      "minMs": 5.471,
+      "maxMs": 7.08,
+      "throughputOpsSec": 160.9,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Replaces 2-table relational join with direct pointer chaining.",
+      "rawSamplesMs": [
+        5.471,
+        5.727,
+        5.772,
+        7.033,
+        7.08
+      ]
+    },
+    {
+      "database": "Neo4j",
+      "operation": "3-Hop DAG Transitive Closure Traversal",
+      "description": "Variable-length multi-hop traversal along prerequisite hierarchy: (:Skill)-[:SKILL_PREREQUISITE_OF*1..3]->(:Skill).",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 10.695,
+      "medianMs": 10.675,
+      "p95Ms": 12.172,
+      "minMs": 9.396,
+      "maxMs": 12.172,
+      "throughputOpsSec": 93.5,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Transitive closure evaluation without recursive SQL Common Table Expression (CTE) table scans.",
+      "rawSamplesMs": [
+        9.396,
+        9.685,
+        10.675,
+        11.546,
+        12.172
+      ]
+    },
+    {
+      "database": "Neo4j",
+      "operation": "Shortest Path Query (Bidirectional BFS)",
+      "description": "Cypher shortestPath() algorithm finding the shortest dependency bridge between student and career goal.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 7.463,
+      "medianMs": 7.465,
+      "p95Ms": 7.752,
+      "minMs": 7.113,
+      "maxMs": 7.752,
+      "throughputOpsSec": 134,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Bidirectional Breadth-First Search navigating pointer records natively.",
+      "rawSamplesMs": [
+        7.113,
+        7.384,
+        7.465,
+        7.603,
+        7.752
+      ]
+    },
+    {
+      "database": "Neo4j",
+      "operation": "Topological Recommendation Query",
+      "description": "Cypher query with pattern comprehension evaluating candidate courses against unacquired skills.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 11.426,
+      "medianMs": 11.212,
+      "p95Ms": 13.31,
+      "minMs": 10.026,
+      "maxMs": 13.31,
+      "throughputOpsSec": 87.5,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Evaluates complex neighborhood overlaps and prerequisite satisfaction in a single graph transaction.",
+      "rawSamplesMs": [
+        10.026,
+        11.073,
+        11.212,
+        11.511,
+        13.31
+      ]
+    },
+    {
+      "database": "Redis",
+      "operation": "Cached In-Memory Read (Direct GET)",
+      "description": "Direct in-memory point read from Redis dictionary bypassing disk I/O completely.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 0.762,
+      "medianMs": 0.833,
+      "p95Ms": 0.922,
+      "minMs": 0.533,
+      "maxMs": 0.922,
+      "throughputOpsSec": 1312.3,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "O(1) hash map lookup. Serves responses in sub-millisecond latency directly from system RAM.",
+      "rawSamplesMs": [
+        0.533,
+        0.639,
+        0.833,
+        0.883,
+        0.922
+      ]
+    },
+    {
+      "database": "Redis",
+      "operation": "Uncached Request (Direct Database Query)",
+      "description": "Request executes query against primary disk database without caching layer acceleration.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 15.78,
+      "medianMs": 15.979,
+      "p95Ms": 16.03,
+      "minMs": 14.958,
+      "maxMs": 16.03,
+      "throughputOpsSec": 63.4,
+      "environment": {
+        "isLiveDb": true,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Demonstrates baseline database latency when cache is bypassed, enduring query parsing and disk seek overhead.",
+      "rawSamplesMs": [
+        14.957600000000184,
+        15.928400000000238,
+        15.979200000000219,
+        16.004300000000057,
+        16.029700000000048
+      ]
+    },
+    {
+      "database": "Redis",
+      "operation": "Cache-Aside: Warm Hit",
+      "description": "Cache-aside lookup where requested key is present; returns cached object with zero database load.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 0.864,
+      "medianMs": 0.778,
+      "p95Ms": 1.096,
+      "minMs": 0.694,
+      "maxMs": 1.096,
+      "throughputOpsSec": 1157.9,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Fast path. Increments cache hit counter and returns pre-serialized data directly.",
+      "rawSamplesMs": [
+        0.694,
+        0.724,
+        0.778,
+        1.026,
+        1.096
+      ]
+    },
+    {
+      "database": "Redis",
+      "operation": "Cache-Aside: Cold Miss (Fetch + Set)",
+      "description": "Cache-aside lookup where key is absent; executes primary fetch, serializes payload, and populates Redis.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 15.952,
+      "medianMs": 15.689,
+      "p95Ms": 17.237,
+      "minMs": 14.228,
+      "maxMs": 17.237,
+      "throughputOpsSec": 62.7,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Slow path. Absorbs network trip to primary store before warming the cache for subsequent requests.",
+      "rawSamplesMs": [
+        14.228,
+        15.549,
+        15.689,
+        17.058,
+        17.237
+      ]
+    },
+    {
+      "database": "Cassandra",
+      "operation": "Point Partition Query",
+      "description": "Point query targeting single partition key (student_id, activity_date) with LIMIT 1.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 4.013,
+      "medianMs": 3.967,
+      "p95Ms": 4.523,
+      "minMs": 3.673,
+      "maxMs": 4.523,
+      "throughputOpsSec": 249.2,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Consistent hashing locates the target node directly using Murmur3 token; zero cluster broadcast.",
+      "rawSamplesMs": [
+        3.673,
+        3.708,
+        3.967,
+        4.193,
+        4.523
+      ]
+    },
+    {
+      "database": "Cassandra",
+      "operation": "Time-Range Clustered Query",
+      "description": "Retrieves events within a partition sorted in reverse chronological order via clustering key.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 6.383,
+      "medianMs": 6.417,
+      "p95Ms": 7.128,
+      "minMs": 5.307,
+      "maxMs": 7.128,
+      "throughputOpsSec": 156.7,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Sequential on-disk scan inside SSTable partition. Avoids in-memory sorting via CLUSTERING ORDER BY.",
+      "rawSamplesMs": [
+        5.307,
+        6.1,
+        6.417,
+        6.964,
+        7.128
+      ]
+    },
+    {
+      "database": "Cassandra",
+      "operation": "Large Partition Result Retrieval (500 Rows)",
+      "description": "Scans large block of time-series event records from a single wide-column partition.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 10.602,
+      "medianMs": 10.766,
+      "p95Ms": 12.393,
+      "minMs": 8.773,
+      "maxMs": 12.393,
+      "throughputOpsSec": 94.3,
+      "environment": {
+        "isLiveDb": false,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Streams sequential rows from local SSTables. Memory overhead bounded by partition paging size.",
+      "rawSamplesMs": [
+        8.773,
+        10.213,
+        10.766,
+        10.867,
+        12.393
+      ]
+    },
+    {
+      "database": "Application",
+      "operation": "Course Recommendation Generation",
+      "description": "Executes end-to-end multi-criteria scoring algorithm across student interests and course prerequisites.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 15.177,
+      "medianMs": 15.413,
+      "p95Ms": 16.629,
+      "minMs": 13.839,
+      "maxMs": 16.629,
+      "throughputOpsSec": 65.9,
+      "environment": {
+        "isLiveDb": true,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Combines Neo4j graph neighborhood queries, weighted scoring formula, and explanation generation.",
+      "rawSamplesMs": [
+        13.839,
+        14.487,
+        15.413,
+        15.515,
+        16.629
+      ]
+    },
+    {
+      "database": "Application",
+      "operation": "Skill-Gap Analysis Evaluation",
+      "description": "Computes set difference and prerequisite deficit between student skill graph and target job ontology.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 10.566,
+      "medianMs": 10.378,
+      "p95Ms": 12.1,
+      "minMs": 9.333,
+      "maxMs": 12.1,
+      "throughputOpsSec": 94.6,
+      "environment": {
+        "isLiveDb": true,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Extracts missing required skills and evaluates readiness score percentage in application layer.",
+      "rawSamplesMs": [
+        9.333,
+        9.595,
+        10.378,
+        11.422,
+        12.1
+      ]
+    },
+    {
+      "database": "Application",
+      "operation": "Personalized Learning Path Generation",
+      "description": "Topological sort over prerequisite DAG producing sequential: Current Skills -> Prerequisites -> Courses -> Job.",
+      "datasetScale": "5K",
+      "runs": 5,
+      "warmupRuns": 2,
+      "avgMs": 19.555,
+      "medianMs": 19.257,
+      "p95Ms": 21.003,
+      "minMs": 18.484,
+      "maxMs": 21.003,
+      "throughputOpsSec": 51.1,
+      "environment": {
+        "isLiveDb": true,
+        "nodeVersion": "v22.15.0",
+        "platform": "win32"
+      },
+      "notes": "Executes Kahn algorithm over skill dependency DAG ensuring zero cycle deadlocks.",
+      "rawSamplesMs": [
+        18.484,
+        18.595,
+        19.257,
+        20.436,
+        21.003
+      ]
+    }
+  ],
+  "fairComparisonMatrix": [
+    {
+      "accessPattern": "Point Entity Read by Unique Key",
+      "bestFitDatabase": "Redis (In-Memory Key-Value) / MongoDB (Indexed B-Tree)",
+      "whyBestFit": "Redis resolves O(1) hash table keys in RAM (<1ms). MongoDB resolves indexed point queries in O(log N) B-Tree seeks (<5ms).",
+      "unsuitableDatabase": "Neo4j / Unpartitioned Scans",
+      "whyUnsuitable": "Graph engines impose relationship traversal overhead unnecessary for isolated single-entity lookups."
+    },
+    {
+      "accessPattern": "Deep Multi-Hop Dependency Traversal (Prerequisite Chains)",
+      "bestFitDatabase": "Neo4j (Property Graph)",
+      "whyBestFit": "Index-Free Adjacency traverses direct double-linked memory pointers in O(k) time independent of global graph scale.",
+      "unsuitableDatabase": "MongoDB ($lookup Joins) / Relational SQL",
+      "whyUnsuitable": "Document and SQL joins require nested foreign-key index scans O(N * log M), degrading exponentially beyond 2 hops."
+    },
+    {
+      "accessPattern": "High-Throughput Append-Heavy Telemetry Ingestion",
+      "bestFitDatabase": "Apache Cassandra (Wide-Column)",
+      "whyBestFit": "Log-Structured Merge-Trees (LSM) append sequentially to CommitLog and Memtable with zero read-before-write or B-Tree page lock contention.",
+      "unsuitableDatabase": "MongoDB (WiredTiger B-Tree) / Neo4j",
+      "whyUnsuitable": "B-Tree node rebalancing and graph pointer index updates induce severe write amplification under continuous ingestion."
+    },
+    {
+      "accessPattern": "Polymorphic Document Modeling with Dynamic Schemas",
+      "bestFitDatabase": "MongoDB (Document Store)",
+      "whyBestFit": "Hierarchical BSON documents store polymorphic entities with varying structures without requiring global DDL migrations.",
+      "unsuitableDatabase": "Cassandra / Rigid Relational Tables",
+      "whyUnsuitable": "Wide-column stores require query-driven strict primary keys and disallow ad-hoc field filtering outside declared indexes."
+    }
+  ]
+}
