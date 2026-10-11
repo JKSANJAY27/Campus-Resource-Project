@@ -333,6 +333,13 @@ export class MockJobFixtureAdapter implements IJobProviderAdapter {
   }
 
   public async getJobById(externalId: string): Promise<NormalizedJob | null> {
+    if (externalId === 'fixture_backend_01' || externalId === 'fix_backend_01') {
+      return this.getJobById('fixture_job_002');
+    }
+    if (externalId === 'fixture_frontend_01' || externalId === 'fix_frontend_01') {
+      return this.getJobById('fixture_job_001');
+    }
+
     const cleanId = externalId.replace(/^fixture_/, '');
     const found = SYNTHETIC_DEVELOPMENT_FIXTURES.find(
       (f) => f.id === externalId || f.externalId === cleanId || f.id === `fixture_${cleanId}`

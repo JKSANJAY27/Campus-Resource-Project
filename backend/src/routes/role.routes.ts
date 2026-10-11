@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getJobsForRoleHandler } from '../controllers/external-job.controller.js';
+import { getRoleJobMarketSummaryHandler } from '../controllers/job-analyzer.controller.js';
 import { CURATED_CAREER_ROLES } from '../constants/career-roles.data.js';
 
 export const roleRouter = Router();
@@ -9,6 +10,12 @@ export const roleRouter = Router();
  * Tailored external job listings for a specific career role.
  */
 roleRouter.get('/:roleId/jobs', getJobsForRoleHandler);
+
+/**
+ * GET /api/roles/:roleId/market-summary & /api/v1/roles/:roleId/market-summary
+ * Real-time aggregated job market demand, missing skills, and course/project remediation.
+ */
+roleRouter.get('/:roleId/market-summary', getRoleJobMarketSummaryHandler);
 
 /**
  * GET /api/roles/:roleId & /api/v1/roles/:roleId

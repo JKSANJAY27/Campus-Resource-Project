@@ -9,14 +9,25 @@ import {
   getJobsForRoleHandler,
   getProvidersStatusHandler,
 } from '../controllers/external-job.controller.js';
+import {
+  analyzeJobTextHandler,
+  analyzeJobByIdHandler,
+} from '../controllers/job-analyzer.controller.js';
 
 export const jobRouter = Router();
+
+// ── Job Description Analysis & Matching Routes ────────────────────────────────
+jobRouter.post('/analyze', analyzeJobTextHandler);
 
 // ── External & Live Provider Job Routes ───────────────────────────────────────
 // (Must be registered before /:jobId parameter route)
 jobRouter.get('/search', searchJobsHandler);
 jobRouter.get('/providers/status', getProvidersStatusHandler);
 jobRouter.get('/role/:roleId', getJobsForRoleHandler);
+
+// ── Specific Job Analysis & Match (registered before generic /:jobId) ─────────
+jobRouter.get('/:jobId/analysis', analyzeJobByIdHandler);
+jobRouter.get('/:jobId/match', analyzeJobByIdHandler);
 
 // ── Campus Internal Job Analytics & Search ────────────────────────────────────
 jobRouter.get('/analytics/skill-demand', getSkillDemandStats);

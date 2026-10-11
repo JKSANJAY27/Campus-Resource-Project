@@ -647,7 +647,7 @@ export class CareerDiscoveryService {
       if (m.isBottleneckPrerequisite) {
         const blocks = bottlenecks.find((b) => b.skillId === m.skillId);
         if (blocks) {
-          reason = `Critical prerequisite bottleneck: must be mastered before progressing to ${blocks.blocksSkillName}`;
+          reason = `Critical prerequisite bottleneck: must be mastered before progressing to ${m.name}`;
         }
       }
 
@@ -782,7 +782,7 @@ export class CareerDiscoveryService {
   /**
    * Resolves full student profile either from ID lookup in MongoDB or raw input object.
    */
-  private async resolveStudentProfile(input: string | StudentProfileInput): Promise<StudentProfileInput> {
+  public async resolveStudentProfile(input: string | StudentProfileInput): Promise<StudentProfileInput> {
     if (typeof input === 'string') {
       const student = await studentRepository.findById(input);
       if (!student) {
