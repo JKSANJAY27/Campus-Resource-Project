@@ -18,6 +18,7 @@ import { syncRouter } from './routes/sync.routes.js';
 import { benchmarkRouter } from './routes/benchmark.routes.js';
 import { nosqlDemoRouter } from './routes/nosql-demo.routes.js';
 import { careerDiscoveryRouter } from './routes/career-discovery.routes.js';
+import { roleRouter } from './routes/role.routes.js';
 import { apiRateLimiter } from './middleware/rateLimiter.js';
 
 export const createApp = (): Express => {
@@ -88,6 +89,11 @@ export const createApp = (): Express => {
   app.use('/api/v1/benchmarks', benchmarkRouter);
   app.use('/api/v1/nosql-demos', nosqlDemoRouter);
   app.use('/api/v1/career-discovery', careerDiscoveryRouter);
+  app.use('/api/v1/roles', roleRouter);
+
+  // Path aliases (supporting both /api and /api/v1 conventions)
+  app.use('/api/jobs', jobRouter);
+  app.use('/api/roles', roleRouter);
 
   // 404 Handler
   app.use((req: Request, res: Response) => {

@@ -1,5 +1,7 @@
+import mongoose from 'mongoose';
 import { jobRepository } from '../repositories/mongo/job.repository.js';
 import { QueryOptions } from '../types/query.js';
+import { externalJobService } from './external-job.service.js';
 
 export class JobService {
   async createJob(data: Record<string, any>) {
@@ -7,9 +9,30 @@ export class JobService {
   }
 
   async getJob(jobId: string) {
-    const job = await jobRepository.findById(jobId);
-    if (!job) throw Object.assign(new Error('Job not found'), { status: 404 });
-    return job;
+    // 1. Resolve external provider / fixture IDs immediately
+    if (
+      jobId.startsWith('jobicy_') ||
+      jobId.startsWith('remotive_') ||
+      jobId.startsWith('fixture_') ||
+      jobId.startsWith('fix_')
+    ) {
+      const externalJob = await externalJobService.getJobById(jobId);
+      if (externalJob) return externalJob;
+    }
+
+    // 2. Query MongoDB campus database only if connected
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const job = await jobRepository.findById(jobId);
+        if (job) return job;
+      } catch {}
+    }
+
+    // 3. Fallback check on external job service
+    const externalJob = await externalJobService.getJobById(jobId);
+    if (externalJob) return externalJob;
+
+    throw Object.assign(new Error(`Job "${jobId}" not found`), { status: 404 });
   }
 
   async listJobs(options: QueryOptions & Record<string, any>) {
