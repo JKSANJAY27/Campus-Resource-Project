@@ -39,6 +39,13 @@ import {
   getMostActiveStudents,
   getSkillDistribution,
   getDepartmentStats,
+  saveJob,
+  removeSavedJob,
+  getSavedJobs,
+  saveRole,
+  removeSavedRole,
+  getSavedRoles,
+  completeLearningMilestone,
 } from '../controllers/student.controller.js';
 
 export const studentRouter = Router();
@@ -71,3 +78,14 @@ studentRouter.delete('/:studentId/custom-projects/:projectId', removeCustomProje
 
 studentRouter.post('/:studentId/clubs', joinClub);
 studentRouter.post('/:studentId/events', attendEvent);
+
+// Career Persistence & Saved States
+studentRouter.get('/:studentId/saved-jobs', getSavedJobs);
+studentRouter.post('/:studentId/saved-jobs', saveJob);
+studentRouter.delete('/:studentId/saved-jobs/:jobId', removeSavedJob);
+
+studentRouter.get('/:studentId/saved-roles', getSavedRoles);
+studentRouter.post('/:studentId/saved-roles', saveRole);
+studentRouter.delete('/:studentId/saved-roles/:roleId', removeSavedRole);
+
+studentRouter.post('/:studentId/milestones', completeLearningMilestone);

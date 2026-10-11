@@ -11,6 +11,7 @@ import { clubRepository } from '../repositories/mongo/club.repository.js';
 import { eventRepository } from '../repositories/mongo/event.repository.js';
 import { syncService } from './sync.service.js';
 import { cacheService } from './cache.service.js';
+import { activityService } from './activity.service.js';
 import { QueryOptions } from '../types/query.js';
 
 export class StudentService {
@@ -415,6 +416,97 @@ export class StudentService {
 
   async getDepartmentStats() {
     return studentRepository.getDepartmentStats();
+  }
+
+  // ── CAREER PERSISTENCE & SAVED STATES ─────────────────
+
+  async saveJob(studentId: string, jobId: string) {
+    const student = await studentRepository.findById(studentId);
+    if (!student) throw Object.assign(new Error('Student not found'), { status: 404 });
+
+    const result = await studentRepository.saveJob(studentId, jobId);
+    cacheService.invalidateStudentCache(studentId).catch(() => {});
+    activityService
+      .recordEvent({
+        studentId,
+        actionType: 'open_job_listing',
+        targetEntityType: 'job',
+        targetEntityId: jobId,
+        metadataJson: JSON.stringify({ action: 'saved_job' }),
+      })
+      .catch(() => {});
+    return result;
+  }
+
+  async removeSavedJob(studentId: string, jobId: string) {
+    const student = await studentRepository.findById(studentId);
+    if (!student) throw Object.assign(new Error('Student not found'), { status: 404 });
+
+    const result = await studentRepository.removeSavedJob(studentId, jobId);
+    cacheService.invalidateStudentCache(studentId).catch(() => {});
+    return result;
+  }
+
+  async getSavedJobs(studentId: string) {
+    const student = await studentRepository.findById(studentId);
+    if (!student) throw Object.assign(new Error('Student not found'), { status: 404 });
+    return studentRepository.getSavedJobs(studentId);
+  }
+
+  async saveRole(studentId: string, roleId: string) {
+    const student = await studentRepository.findById(studentId);
+    if (!student) throw Object.assign(new Error('Student not found'), { status: 404 });
+
+    const result = await studentRepository.saveRole(studentId, roleId);
+    cacheService.invalidateStudentCache(studentId).catch(() => {});
+    activityService
+      .recordEvent({
+        studentId,
+        actionType: 'view_career_role',
+        targetEntityType: 'role',
+        targetEntityId: roleId,
+        metadataJson: JSON.stringify({ action: 'saved_role' }),
+      })
+      .catch(() => {});
+    return result;
+  }
+
+  async removeSavedRole(studentId: string, roleId: string) {
+    const student = await studentRepository.findById(studentId);
+    if (!student) throw Object.assign(new Error('Student not found'), { status: 404 });
+
+    const result = await studentRepository.removeSavedRole(studentId, roleId);
+    cacheService.invalidateStudentCache(studentId).catch(() => {});
+    return result;
+  }
+
+  async getSavedRoles(studentId: string) {
+    const student = await studentRepository.findById(studentId);
+    if (!student) throw Object.assign(new Error('Student not found'), { status: 404 });
+    return studentRepository.getSavedRoles(studentId);
+  }
+
+  async completeLearningMilestone(
+    studentId: string,
+    milestoneId: string,
+    roleId?: string,
+    metadata?: Record<string, any>
+  ) {
+    const student = await studentRepository.findById(studentId);
+    if (!student) throw Object.assign(new Error('Student not found'), { status: 404 });
+
+    cacheService.invalidateStudentCache(studentId).catch(() => {});
+    await activityService
+      .recordEvent({
+        studentId,
+        actionType: 'complete_learning_milestone',
+        targetEntityType: 'milestone',
+        targetEntityId: milestoneId,
+        metadataJson: JSON.stringify({ roleId, ...metadata }),
+      })
+      .catch(() => {});
+
+    return { success: true, milestoneId, completedAt: new Date() };
   }
 }
 

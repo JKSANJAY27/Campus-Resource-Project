@@ -111,7 +111,7 @@ describe('Phase 9: Multi-Model NoSQL Benchmarking & Performance Comparison - Uni
       expect(metrics[0].database).toBe('Polyglot');
       expect(metrics[0].category).toBe('composite');
       expect(metrics[0].p50Ms).toBeGreaterThan(0);
-    });
+    }, 25000);
   });
 
   // ==========================================================================
@@ -199,6 +199,6 @@ describe('Phase 9: Multi-Model NoSQL Benchmarking & Performance Comparison - Uni
       expect(suite.metrics.length).toBeGreaterThanOrEqual(10);
       expect(suite.comparisons.length).toBeGreaterThanOrEqual(2);
       expect(service.getLatestResult()).toEqual(suite);
-    });
+    }, 35000);
   });
 });

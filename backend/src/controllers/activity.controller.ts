@@ -60,6 +60,48 @@ export class ActivityController {
   });
 
   /**
+   * Direct Student Activity Query via Query Params
+   * GET /api/v1/activity/student?studentId=xxx
+   */
+  public getStudentActivityDirect = asyncHandler(async (req: Request, res: Response) => {
+    const studentId = req.query.studentId as string;
+    if (!studentId) {
+      res.status(400).json({
+        success: false,
+        error: 'BadRequest',
+        message: 'studentId is required',
+      });
+      return;
+    }
+    const date = req.query.date as string | undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
+
+    const events = await activityService.getStudentActivity(studentId, date, limit);
+    ok(res, events, 'Student activity retrieved for date partition');
+  });
+
+  /**
+   * Direct Resource Activity Query via Query Params
+   * GET /api/v1/activity/resource?resourceId=xxx
+   */
+  public getResourceActivityDirect = asyncHandler(async (req: Request, res: Response) => {
+    const resourceId = req.query.resourceId as string;
+    if (!resourceId) {
+      res.status(400).json({
+        success: false,
+        error: 'BadRequest',
+        message: 'resourceId is required',
+      });
+      return;
+    }
+    const date = req.query.date as string | undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
+
+    const events = await activityService.getResourceActivity(resourceId, date, limit);
+    ok(res, events, 'Resource activity retrieved for date partition');
+  });
+
+  /**
    * 4. Query Pattern 3: Recommendation Interaction History
    * GET /api/v1/activity/students/:studentId/recommendations?recType=course&limit=50
    */

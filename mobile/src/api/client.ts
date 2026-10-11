@@ -451,6 +451,73 @@ export async function setActiveGoal(goal: ActiveCareerGoal | null): Promise<void
   } catch {}
 }
 
+// ── Multi-Model NoSQL Backend Sync Functions ──────────────────────────────────
+
+export async function syncSavedJobToBackend(studentId: string, jobId: string): Promise<any> {
+  try {
+    return await post(`/students/${studentId}/saved-jobs`, { jobId });
+  } catch {
+    return null;
+  }
+}
+
+export async function removeSavedJobFromBackend(studentId: string, jobId: string): Promise<any> {
+  try {
+    return await del(`/students/${studentId}/saved-jobs/${jobId}`);
+  } catch {
+    return null;
+  }
+}
+
+export async function syncSavedRoleToBackend(studentId: string, roleId: string): Promise<any> {
+  try {
+    return await post(`/students/${studentId}/saved-roles`, { roleId });
+  } catch {
+    return null;
+  }
+}
+
+export async function removeSavedRoleFromBackend(studentId: string, roleId: string): Promise<any> {
+  try {
+    return await del(`/students/${studentId}/saved-roles/${roleId}`);
+  } catch {
+    return null;
+  }
+}
+
+export async function recordMilestoneToBackend(
+  studentId: string,
+  milestoneId: string,
+  roleId?: string,
+  metadata?: Record<string, any>
+): Promise<any> {
+  try {
+    return await post(`/students/${studentId}/milestones`, { milestoneId, roleId, metadata });
+  } catch {
+    return null;
+  }
+}
+
+export async function recordActivityEventToBackend(
+  studentId: string,
+  actionType: string,
+  targetEntityType: string,
+  targetEntityId: string,
+  metadata?: Record<string, any>
+): Promise<any> {
+  try {
+    return await post('/activity/events', {
+      studentId,
+      actionType,
+      targetEntityType,
+      targetEntityId,
+      metadata,
+    });
+  } catch {
+    return null;
+  }
+}
+
 // ── Diagnostics ───────────────────────────────────────────────────────────────
 
 export async function testApiHealth(): Promise<{

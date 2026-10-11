@@ -114,3 +114,62 @@ export const getSkillDistribution = asyncHandler(async (_req: Request, res: Resp
 export const getDepartmentStats = asyncHandler(async (_req: Request, res: Response) => {
   ok(res, await studentService.getDepartmentStats());
 });
+
+// ── CAREER PERSISTENCE HANDLERS ────────────────────────────────────
+
+export const saveJob = asyncHandler(async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+  const { jobId } = req.body;
+  if (!jobId) {
+    res.status(400).json({ success: false, error: 'BadRequest', message: 'jobId is required' });
+    return;
+  }
+  const result = await studentService.saveJob(studentId, jobId);
+  ok(res, result, 'Job saved successfully');
+});
+
+export const removeSavedJob = asyncHandler(async (req: Request, res: Response) => {
+  const { studentId, jobId } = req.params;
+  const result = await studentService.removeSavedJob(studentId, jobId);
+  ok(res, result, 'Saved job removed successfully');
+});
+
+export const getSavedJobs = asyncHandler(async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+  const savedJobs = await studentService.getSavedJobs(studentId);
+  ok(res, savedJobs, 'Saved jobs retrieved successfully');
+});
+
+export const saveRole = asyncHandler(async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+  const { roleId } = req.body;
+  if (!roleId) {
+    res.status(400).json({ success: false, error: 'BadRequest', message: 'roleId is required' });
+    return;
+  }
+  const result = await studentService.saveRole(studentId, roleId);
+  ok(res, result, 'Role saved successfully');
+});
+
+export const removeSavedRole = asyncHandler(async (req: Request, res: Response) => {
+  const { studentId, roleId } = req.params;
+  const result = await studentService.removeSavedRole(studentId, roleId);
+  ok(res, result, 'Saved role removed successfully');
+});
+
+export const getSavedRoles = asyncHandler(async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+  const savedRoles = await studentService.getSavedRoles(studentId);
+  ok(res, savedRoles, 'Saved roles retrieved successfully');
+});
+
+export const completeLearningMilestone = asyncHandler(async (req: Request, res: Response) => {
+  const { studentId } = req.params;
+  const { milestoneId, roleId, metadata } = req.body;
+  if (!milestoneId) {
+    res.status(400).json({ success: false, error: 'BadRequest', message: 'milestoneId is required' });
+    return;
+  }
+  const result = await studentService.completeLearningMilestone(studentId, milestoneId, roleId, metadata);
+  ok(res, result, 'Learning milestone completed and logged to Cassandra');
+});

@@ -14,8 +14,25 @@ export interface StudentActivityRecord {
     | 'click_recommendation'
     | 'attend_event'
     | 'complete_quiz'
-    | 'search_skills';
-  targetEntityType: 'resource' | 'project' | 'course' | 'job' | 'event' | 'skill';
+    | 'search_skills'
+    | 'view_career_role'
+    | 'open_job_listing'
+    | 'save_learning_path'
+    | 'complete_course'
+    | 'view_recommendation'
+    | 'complete_learning_milestone'
+    | string;
+  targetEntityType:
+    | 'resource'
+    | 'project'
+    | 'course'
+    | 'job'
+    | 'event'
+    | 'skill'
+    | 'role'
+    | 'learning_path'
+    | 'milestone'
+    | string;
   targetEntityId: string;
   durationSeconds?: number;
   metadataJson?: string;

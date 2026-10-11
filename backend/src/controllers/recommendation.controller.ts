@@ -119,6 +119,53 @@ export class RecommendationController {
     const roles = recommendationService.getAvailableRoles();
     ok(res, roles, 'Available career roles retrieved successfully');
   });
+
+  /**
+   * 9. Skill Gap Analysis via query params
+   * GET /api/v1/recommendations/skill-gap?studentId=xxx&targetType=job&targetId=yyy
+   */
+  public getSkillGapDirect = asyncHandler(async (req: Request, res: Response) => {
+    const studentId = (req.query.studentId as string) || (req.params.studentId as string);
+    const { targetType, targetId } = req.query as {
+      targetType: 'job' | 'project' | 'skill';
+      targetId: string;
+    };
+
+    if (!studentId || !targetType || !targetId) {
+      res.status(400).json({
+        success: false,
+        error: 'BadRequest',
+        message: 'studentId, targetType, and targetId are required',
+      });
+      return;
+    }
+
+    const { data, cached, latencyMs } = await cacheService.getCachedSkillGap(studentId, targetType, targetId);
+    res.setHeader('X-Cache-Status', cached ? 'HIT' : 'MISS');
+    res.setHeader('X-Response-Time-Ms', latencyMs.toString());
+    ok(res, data, `Skill gap analysis computed (${cached ? 'Cache HIT' : 'Cache MISS'} in ${latencyMs}ms)`);
+  });
+
+  /**
+   * 10. Job Readiness via query params
+   * GET /api/v1/recommendations/job-readiness?studentId=xxx&jobId=yyy
+   */
+  public getJobReadinessDirect = asyncHandler(async (req: Request, res: Response) => {
+    const studentId = (req.query.studentId as string) || (req.params.studentId as string);
+    const jobId = (req.query.jobId as string) || (req.params.jobId as string);
+
+    if (!studentId || !jobId) {
+      res.status(400).json({
+        success: false,
+        error: 'BadRequest',
+        message: 'studentId and jobId are required',
+      });
+      return;
+    }
+
+    const readiness = await recommendationService.getJobReadinessAnalysis(studentId, jobId);
+    ok(res, readiness, 'Job readiness analysis computed');
+  });
 }
 
 export const recommendationController = new RecommendationController();

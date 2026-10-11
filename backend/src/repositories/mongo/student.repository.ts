@@ -247,6 +247,54 @@ export class StudentRepository extends BaseMongoRepository<IStudent> {
     return student?.savedPathways ?? [];
   }
 
+  /** Save a job for the student */
+  public async saveJob(studentId: string, jobId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $addToSet: { savedJobIds: jobId } } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Remove a saved job */
+  public async removeSavedJob(studentId: string, jobId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $pull: { savedJobIds: jobId } } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Get saved jobs for a student */
+  public async getSavedJobs(studentId: string): Promise<string[]> {
+    const student = await this.model.findOne({ studentId }, { savedJobIds: 1 }).lean().exec();
+    return (student as any)?.savedJobIds ?? [];
+  }
+
+  /** Save a career role for the student */
+  public async saveRole(studentId: string, roleId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $addToSet: { savedRoleIds: roleId } } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Remove a saved career role */
+  public async removeSavedRole(studentId: string, roleId: string): Promise<IStudent | null> {
+    return this.model.findOneAndUpdate(
+      { studentId },
+      { $pull: { savedRoleIds: roleId } } as any,
+      { new: true }
+    ).exec();
+  }
+
+  /** Get saved career roles for a student */
+  public async getSavedRoles(studentId: string): Promise<string[]> {
+    const student = await this.model.findOne({ studentId }, { savedRoleIds: 1 }).lean().exec();
+    return (student as any)?.savedRoleIds ?? [];
+  }
+
   // ──────────────────────────────────────────────────────
   // AGGREGATION PIPELINES
   // ──────────────────────────────────────────────────────

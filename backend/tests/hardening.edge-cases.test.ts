@@ -331,7 +331,7 @@ describe('Phase 13: System Hardening & Critical Edge Cases Suite', () => {
       vi.mocked(cacheRepository.get).mockResolvedValueOnce(JSON.stringify({ data: 'stale_val' }));
       const fetcher1 = vi.fn().mockResolvedValue({ data: 'fresh_val' });
       const res1 = await cacheService.getOrSet('test:cache:key', fetcher1, 300);
-      expect(res1).toEqual({ data: 'stale_val' });
+      expect(res1.data).toEqual({ data: 'stale_val' });
       expect(fetcher1).not.toHaveBeenCalled();
 
       // Invalidation event
@@ -345,7 +345,7 @@ describe('Phase 13: System Hardening & Critical Edge Cases Suite', () => {
       const res2 = await cacheService.getOrSet('test:cache:key', fetcher2, 300);
 
       expect(fetcher2).toHaveBeenCalledTimes(1);
-      expect(res2).toEqual({ data: 'fresh_val' });
+      expect(res2.data).toEqual({ data: 'fresh_val' });
       expect(cacheRepository.set).toHaveBeenCalledWith(
         'test:cache:key',
         JSON.stringify({ data: 'fresh_val' }),

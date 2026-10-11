@@ -8,6 +8,12 @@ export const activityRouter = Router();
 // POST /api/v1/activity/events
 activityRouter.post('/events', apiRateLimiter, activityController.recordEvent);
 
+// Direct Query Endpoints with query params
+// GET /api/v1/activity/student?studentId=xxx
+activityRouter.get('/student', apiRateLimiter, activityController.getStudentActivityDirect);
+// GET /api/v1/activity/resource?resourceId=xxx
+activityRouter.get('/resource', apiRateLimiter, activityController.getResourceActivityDirect);
+
 // 2. Query Pattern 1: Student Activity by Date
 // GET /api/v1/activity/students/:studentId?date=YYYY-MM-DD&limit=50
 activityRouter.get('/students/:studentId', apiRateLimiter, activityController.getStudentActivity);

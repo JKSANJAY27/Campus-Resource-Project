@@ -145,6 +145,7 @@ export interface JobRecommendation {
 
 export interface JobReadinessAnalysis {
   studentId: string;
+  isQualified?: boolean;
   job: {
     id: string;
     title: string;
@@ -302,15 +303,16 @@ export class RecommendationService {
 
     if (targetType === 'job') {
       const jobData = await graphRepository.findJobRequiredSkills(targetId);
-      if (jobData) {
-        targetName = `${jobData.title} at ${jobData.company}`;
-        requiredSkills = jobData.requiredSkills.map((s) => ({
-          id: s.skillId,
-          name: s.name,
-          category: s.category,
-          tier: s.tier,
-        }));
+      if (!jobData) {
+        throw Object.assign(new Error(`Target job not found: ${targetId}`), { status: 404 });
       }
+      targetName = `${jobData.title} at ${jobData.company}`;
+      requiredSkills = jobData.requiredSkills.map((s) => ({
+        id: s.skillId,
+        name: s.name,
+        category: s.category,
+        tier: s.tier,
+      }));
     } else if (targetType === 'project') {
       const allProjects = await recommendationRepository.findAllProjectsWithSkills();
       const proj = allProjects.find((p) => p.projectId === targetId);
@@ -373,7 +375,7 @@ export class RecommendationService {
     const matchedNames = matchedSkills.map((s) => s.name).join(', ') || 'none';
     const missingNames = missingWithPrereqs.map((s) => s.name).join(', ') || 'none';
     const summary =
-      `Student has acquired ${matchedSkills.length} of ${totalRequired} required skills (${readinessPercentage}% readiness). ` +
+      `Student has acquired ${matchedSkills.length} of ${totalRequired} required skills (${readinessPercentage.toFixed(1)}% readiness). ` +
       `Matched skills: [${matchedNames}]. ` +
       (missingWithPrereqs.length > 0
         ? `Skill gaps detected in: [${missingNames}]. Bridge these gaps via recommended courses and resources.`
@@ -607,7 +609,7 @@ export class RecommendationService {
       recommendationRepository.findStudentInterests(studentId),
       recommendationRepository.findStudentCompletedCourses(studentId),
       recommendationRepository.findAllCoursesWithSkills(),
-      recommendationRepository.findSkillPopularity().catch(() => new Map<string, number>()),
+      Promise.resolve(recommendationRepository.findSkillPopularity?.()).catch(() => new Map<string, number>()).then((m) => m || new Map<string, number>()),
     ]);
 
     const studentSkillIds = new Set(studentSkills.map((s) => s.skillId));
@@ -733,7 +735,7 @@ export class RecommendationService {
       graphRepository.findStudentCurrentSkills(studentId),
       recommendationRepository.findStudentInterests(studentId),
       recommendationRepository.findAllProjectsWithSkills(),
-      recommendationRepository.findSkillPopularity().catch(() => new Map<string, number>()),
+      Promise.resolve(recommendationRepository.findSkillPopularity?.()).catch(() => new Map<string, number>()).then((m) => m || new Map<string, number>()),
     ]);
 
     const studentSkillIds = new Set(studentSkills.map((s) => s.skillId));
@@ -841,7 +843,7 @@ export class RecommendationService {
       graphRepository.findStudentCurrentSkills(studentId),
       recommendationRepository.findStudentInterests(studentId),
       recommendationRepository.findAllJobsWithSkills(),
-      recommendationRepository.findSkillPopularity().catch(() => new Map<string, number>()),
+      Promise.resolve(recommendationRepository.findSkillPopularity?.()).catch(() => new Map<string, number>()).then((m) => m || new Map<string, number>()),
     ]);
 
     const studentSkillIds = new Set(studentSkills.map((s) => s.skillId));
@@ -1033,6 +1035,7 @@ export class RecommendationService {
 
     return {
       studentId,
+      isQualified: missingSkillsRaw.length === 0 || readinessPercentage >= 75,
       job: {
         id: jobData.jobId,
         title: jobData.title,

@@ -7,6 +7,10 @@ export const recommendationRouter = Router();
 // GET /api/v1/recommendations/roles
 recommendationRouter.get('/roles', recommendationController.getAvailableRoles);
 
+// Direct skill gap and job readiness routes (query parameter support)
+recommendationRouter.get('/skill-gap', recommendationController.getSkillGapDirect);
+recommendationRouter.get('/job-readiness', recommendationController.getJobReadinessDirect);
+
 // 1. Skill gap analysis
 // GET /api/v1/recommendations/students/:studentId/skill-gap?targetType=job&targetId=xxx
 recommendationRouter.get('/students/:studentId/skill-gap', recommendationController.getSkillGap);
